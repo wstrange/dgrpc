@@ -1,0 +1,1 @@
+{"isEntrypoint":false,"deps":["grpc|lib/src/client/options.dart","grpc|lib/src/client/web_channel.dart"],"parts":[],"conditionalDeps":[],"sdkDeps":[],"hasMain":false}

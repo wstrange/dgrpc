@@ -1,0 +1,1 @@
+{"isEntrypoint":false,"deps":["http|lib/http.dart","googleapis_auth|lib/src/access_credentials.dart"],"parts":[],"conditionalDeps":[],"sdkDeps":[],"hasMain":false}

@@ -1,0 +1,1 @@
+{"m":[{"p":["grpc_web","lib/app.dart"],"s":[["grpc_web","lib/app.dart"]],"d":[["protos","lib/src/generated/echo.pbgrpc.dart"]],"m":false,"is":true,"pf":"ddc"},{"p":["grpc_web","web/main.dart"],"s":[["grpc_web","web/main.dart"]],"d":[["grpc","lib/grpc_web.dart"],["grpc_web","lib/app.dart"],["protos","lib/src/generated/echo.pbgrpc.dart"]],"m":false,"is":true,"pf":"ddc"}]}

@@ -1,0 +1,12 @@
+name: protos
+description: proto defs for sample
+version: 1.0.0
+
+environment:
+  sdk: '>=2.16.0 <3.0.0'
+
+dependencies:
+  grpc: ^3.0.2
+
+dev_dependencies:
+  test: ^1.15.0

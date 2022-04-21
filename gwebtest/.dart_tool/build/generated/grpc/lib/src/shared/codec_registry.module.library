@@ -1,0 +1,1 @@
+{"isEntrypoint":false,"deps":["grpc|lib/src/shared/codec.dart"],"parts":[],"conditionalDeps":[],"sdkDeps":[],"hasMain":false}

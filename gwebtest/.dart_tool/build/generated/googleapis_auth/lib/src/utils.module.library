@@ -1,0 +1,1 @@
+{"isEntrypoint":false,"deps":["http|lib/http.dart","http_parser|lib/http_parser.dart","googleapis_auth|lib/src/access_token.dart","googleapis_auth|lib/src/exceptions.dart","googleapis_auth|lib/src/http_client_base.dart","googleapis_auth|lib/src/known_uris.dart"],"parts":[],"conditionalDeps":[],"sdkDeps":["convert"],"hasMain":false}

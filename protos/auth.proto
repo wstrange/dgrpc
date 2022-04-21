@@ -1,0 +1,27 @@
+
+
+syntax = "proto3";
+
+package dgrpc;
+
+// Authenticate.
+message AuthRequest {
+  // Id token issued by Firebase
+  string id_token = 1;
+}
+
+message AuthResponse {
+  // The session id
+  string session_id = 1;
+  enum AuthErrors {
+    OK = 0;
+    ERROR = 1;
+    // define other errors...
+  }
+  AuthErrors error = 2;
+  repeated string messages = 3;
+}
+
+service AuthService {
+  rpc Authenticate(AuthRequest) returns (AuthResponse);
+}
