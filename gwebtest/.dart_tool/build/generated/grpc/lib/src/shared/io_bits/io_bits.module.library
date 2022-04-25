@@ -1,1 +1,0 @@
-{"isEntrypoint":false,"deps":[],"parts":[],"conditionalDeps":[{"$default":"grpc|lib/src/shared/io_bits/io_bits_io.dart","dart.library.html":"grpc|lib/src/shared/io_bits/io_bits_web.dart"}],"sdkDeps":[],"hasMain":false}

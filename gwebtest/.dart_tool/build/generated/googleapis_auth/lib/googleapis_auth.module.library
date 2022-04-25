@@ -1,1 +1,0 @@
-{"isEntrypoint":true,"deps":["googleapis_auth|lib/src/auth_client.dart","googleapis_auth|lib/src/auth_functions.dart","googleapis_auth|lib/src/client_id.dart","googleapis_auth|lib/src/exceptions.dart","googleapis_auth|lib/src/response_type.dart","googleapis_auth|lib/src/service_account_credentials.dart"],"parts":[],"conditionalDeps":[],"sdkDeps":[],"hasMain":false}

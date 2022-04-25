@@ -1,1 +1,0 @@
-{"isEntrypoint":false,"deps":["grpc|lib/src/client/http2_channel.dart","grpc|lib/src/client/options.dart","grpc|lib/src/client/transport/http2_credentials.dart"],"parts":[],"conditionalDeps":[],"sdkDeps":[],"hasMain":false}
