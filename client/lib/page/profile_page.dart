@@ -1,29 +1,41 @@
 import 'dart:developer';
 
+import 'package:client/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:developer' as developer;
 
 import 'package:protos/protos.dart';
 import 'package:grpc/grpc_web.dart';
 
-import 'auth.dart';
+import 'auth_page.dart';
 
 /// Displayed as a profile image if the user doesn't have one.
 const placeholderImage =
     'https://upload.wikimedia.org/wikipedia/commons/c/cd/Portrait_Placeholder_Square.png';
 
+class ProfilePage extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(authStateChangesProvider);
+    return Scaffold(body: ProfileScreen(),);
+  }
+
+}
+
 /// Profile page shows after sign in or registerationg
-class ProfilePage extends StatefulWidget {
+class ProfileScreen extends StatefulWidget {
   // ignore: public_member_api_docs
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _ProfilePageState createState() => _ProfilePageState();
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfileScreenState extends State<ProfileScreen> {
   late User user;
   late TextEditingController controller;
 
@@ -261,6 +273,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   /// Example code for sign out.
   Future<void> _signOut() async {
+    developer.log('sign out');
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();
   }

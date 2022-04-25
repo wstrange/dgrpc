@@ -13,7 +13,15 @@ final authStateChangesProvider = StreamProvider<User?>((ref) {
   return ref.watch(firebaseAuthProvider).authStateChanges();
 });
 
-
+// works...
+final userProvider = Provider<User?>( (ref){
+  final a = ref.watch(authStateChangesProvider);
+  var u = a.asData?.value;
+  if( u?.uid != null ) {
+    return u!;
+  }
+  return null;
+});
 final sessionChangeProvider = StreamProvider<String>((ref)  {
   var controller = StreamController<String>();
 

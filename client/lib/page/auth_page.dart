@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'config.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,13 @@ class ScaffoldSnackbar {
   }
 }
 
+class AuthPage extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(body: AuthGate());
+  }
+}
+
 /// The mode of the current auth session, either [AuthMode.login] or [AuthMode.register].
 // ignore: public_member_api_docs
 enum AuthMode { login, register, phone }
@@ -58,6 +66,7 @@ class AuthGate extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _AuthGateState();
 }
+
 
 class _AuthGateState extends State<AuthGate> {
   TextEditingController emailController = TextEditingController();

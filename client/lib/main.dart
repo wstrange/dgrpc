@@ -5,12 +5,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'provider.dart';
-import 'auth.dart';
-import 'profile.dart';
+import 'page/auth_page.dart';
+import 'page/profile_page.dart';
 
 // Import the generated file
 import 'firebase_options.dart';
 import 'dart:developer' as developer;
+
+import 'router.dart';
 
 // Requires that the Firebase Auth emulator is running locally
 // e.g via `melos run firebase:emulator`.
@@ -25,9 +27,27 @@ Future<void> main() async {
 
   // await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
 
-  runApp(ProviderScope(child: const AuthExampleApp()));
+  runApp(ProviderScope(child: const App()));
+
 }
 
+class App extends ConsumerWidget {
+  const App({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+
+    return MaterialApp.router(
+      routeInformationParser: router.routeInformationParser,
+      routerDelegate: router.routerDelegate,
+      title: 'Grpc app',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+    );
+  }
+}
 /// The entry point of the application.
 ///
 /// Returns a [MaterialApp].
@@ -77,7 +97,7 @@ class AuthExampleApp extends ConsumerWidget {
                     stream: FirebaseAuth.instance.authStateChanges(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        return const ProfilePage();
+                        return const ProfileScreen();
                       }
                       return const AuthGate();
                     },
