@@ -1,0 +1,32 @@
+
+syntax = "proto3";
+
+package dgrpc;
+//import "google/protobuf/timestamp.proto";
+
+message Event {
+    int32 event_id = 1;
+    string description = 2;
+    string title = 3;
+    int64 event_start_ts = 4;
+    int64 event_end_ts = 5;
+    int64 register_start_ts = 6;
+    int64 register_end_ts = 7;
+    int32 max_particpants = 8;
+    int32 min_particpants = 9;
+    string created_by_uid = 10;
+}
+
+message EventLookupRequest {
+    int32 section_id = 1;
+    int64 from_ts = 2;
+    int64 to_ts = 3;
+}
+
+message EventLookupResponse {
+    repeated Event events = 1;
+}
+
+service EventService {
+    rpc Echo(EventLookupRequest) returns (EventLookupResponse);
+}

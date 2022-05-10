@@ -38,7 +38,7 @@ Future<void> main(List<String> args) async {
   final name = args.isNotEmpty ? args[0] : 'world foo';
 
   try {
-    var ec = EchoRequest(message: name, idToken: idtoken);
+    var ec = EchoRequest(message: name);
 
     var json = ec.toProto3Json();
 

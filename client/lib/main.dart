@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,7 +26,7 @@ Future<void> main() async {
 
   // await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
 
-  runApp(ProviderScope(child: const App()));
+  runApp(const ProviderScope(child: App()));
 
 }
 

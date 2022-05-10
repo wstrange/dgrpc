@@ -42,7 +42,7 @@ class ScaffoldSnackbar {
 class AuthPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(body: AuthGate());
+    return const Scaffold(body: AuthGate());
   }
 }
 
