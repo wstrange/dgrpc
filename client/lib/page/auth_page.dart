@@ -546,9 +546,9 @@ class _AuthGateState extends State<AuthGate> {
       } else {
         // Create a TwitterLogin instance
         final twitterLogin = TwitterLogin(
-          apiKey: TwitterConfig['API_KEY']!,
-          apiSecretKey: TwitterConfig['API_SECRET_KEY']!,
-          redirectURI: TwitterConfig['REDIRECT_URL']!,
+          apiKey: twitterConfig['API_KEY']!,
+          apiSecretKey: twitterConfig['API_SECRET_KEY']!,
+          redirectURI: twitterConfig['REDIRECT_URL']!,
         );
 
         // Trigger the sign-in flow

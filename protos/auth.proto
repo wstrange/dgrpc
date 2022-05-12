@@ -24,4 +24,6 @@ message AuthResponse {
 
 service AuthService {
   rpc Authenticate(AuthRequest) returns (AuthResponse);
+  // for local testing.
+  rpc AuthenticateLocal(AuthRequest) returns (AuthResponse);
 }

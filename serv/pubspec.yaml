@@ -14,7 +14,8 @@ dependencies:
   shelf_static: ^1.1.0
   protos:
     path: ../protos
-  postgres: ^2.4.3
+  db:
+    path: ../db
 
 dev_dependencies:
   http: ^0.13.0

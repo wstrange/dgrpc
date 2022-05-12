@@ -1,4 +1,4 @@
-import 'package:db/event.dart';
+import 'package:db/event_db.dart';
 import 'package:postgres/postgres.dart';
 
 void main(List<String> arguments) async {
@@ -21,7 +21,7 @@ void main(List<String> arguments) async {
 
   var uid = await db
       .into(db.persons)
-      .insert(PersonsCompanion.insert(email: 'test@test.com'));
+      .insert(PersonsCompanion.insert(email: 'test@test.com', ssid: 'foo123'));
 
   var sectionId = await db.into(db.sections).insert(SectionsCompanion.insert(
       name: 'Calgary', description: 'Calgary Section ACC'));

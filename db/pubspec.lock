@@ -43,13 +43,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  buffer:
-    dependency: transitive
-    description:
-      name: buffer
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.1"
   build:
     dependency: transitive
     description:
@@ -183,15 +176,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.6.0"
-  drift_postgres:
-    dependency: "direct main"
-    description:
-      path: "extras/drift_postgres"
-      ref: HEAD
-      resolved-ref: b7cbb313391503cfcd120cc1c5189949e455acd5
-      url: "https://github.com/simolus3/drift.git"
-    source: git
-    version: "1.0.0"
   ffi:
     dependency: transitive
     description:
@@ -275,7 +259,7 @@ packages:
       name: lints
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "2.0.0"
   logging:
     dependency: transitive
     description:
@@ -325,13 +309,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.1"
-  pedantic:
-    dependency: transitive
-    description:
-      name: pedantic
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.11.1"
   pool:
     dependency: transitive
     description:
@@ -339,13 +316,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.0"
-  postgres:
-    dependency: transitive
-    description:
-      name: postgres
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.4.3"
   pub_semver:
     dependency: transitive
     description:
@@ -367,20 +337,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
-  sasl_scram:
-    dependency: transitive
-    description:
-      name: sasl_scram
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
-  saslprep:
-    dependency: transitive
-    description:
-      name: saslprep
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
   shelf:
     dependency: transitive
     description:
@@ -521,13 +477,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0"
-  unorm_dart:
-    dependency: transitive
-    description:
-      name: unorm_dart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.0"
   vm_service:
     dependency: transitive
     description:
@@ -564,4 +513,4 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=2.16.2 <3.0.0"
+  dart: ">=2.17.0-206.0.dev <3.0.0"

@@ -7,7 +7,7 @@
 ///    1. `flutterfireauth://`
 ///    2. `https://react-native-firebase-testing.firebaseapp.com/__/auth/handler`
 /// 4. Add your keys to the example app config in [`lib/config.dart`](./lib/config.dart).
-Map<String, String> TwitterConfig = {
+Map<String, String> twitterConfig = {
   'API_KEY': 'PLACE YOUR API KEY HERE',
   'API_SECRET_KEY': 'PLACE YOUR API SECRET KEY HERE',
   'REDIRECT_URL': 'flutterfireauth://',

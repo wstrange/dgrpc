@@ -14,80 +14,17 @@
 // limitations under the License.
 
 /// Dart implementation of the gRPC helloworld.Greeter server.
-import 'dart:async';
 
+import 'package:db/db.dart';
 import 'package:grpc/grpc.dart';
-import 'package:protos/protos.dart';
-import 'package:serv/auth/token_validator.dart';
-import 'package:serv/auth/session.dart';
+import 'package:serv/serv.dart';
 
-final _firebaseId = 'dgrpc-87463';
-final validator = TokenValidator(_firebaseId);
-
-class AuthService extends AuthServiceBase {
-  @override
-  Future<AuthResponse> authenticate(
-      ServiceCall call, AuthRequest request) async {
-    var token = request.idToken;
-    TokenInfo? tokenInfo;
-    var response = AuthResponse();
-    try {
-      tokenInfo = await validator.validate(token);
-      if (tokenInfo.hasErrors()) {
-        response.error = AuthResponse_AuthErrors.ERROR;
-        response.messages.addAll(tokenInfo.validationErrors());
-      } else {
-        // create a session. TODO - check to see if we already have a session..
-        var s = sessionManager.createSession(claims: tokenInfo.claims);
-        response.sessionId = s.id;
-      }
-    } catch (e) {
-      print('validation error $e');
-      response.error = AuthResponse_AuthErrors.ERROR;
-      response.messages.add('$e');
-    }
-    return response;
-  }
-}
-
-class EchoService extends EchoServiceBase {
-  @override
-  Future<EchoResponse> echo(ServiceCall call, EchoRequest request) async {
-    var uid = call.clientMetadata!['uid'];
-    print('echo for uid=$uid');
-    return EchoResponse()..message = 'Hello World ${request.message} uid=$uid';
-  }
-}
-
-FutureOr<GrpcError?> authInterceptor(
-    ServiceCall call, ServiceMethod method) async {
-  print('Intercept: $call, $method  name: ${method.name}');
-
-  // The authenticate method does not require a session.
-  // The id token request is carried inbound in the request payload
-  if (method.name != 'Authenticate') {
-    print('check for session');
-    var auth = call.clientMetadata?['authorization'];
-    print('auth header = $auth');
-
-    if (auth == null) {
-      return GrpcError.unauthenticated('Authentication header not found!');
-    }
-    // get the session...
-    var session = sessionManager.getSessionById(auth);
-    if (session == null) {
-      return GrpcError.unauthenticated('Session expired or not found');
-    }
-    call.clientMetadata!['session'] = session.id;
-    call.clientMetadata!['uid'] = session.uid;
-  }
-  // no errors - just pass the call on.
-}
+final db = Database();
 
 Future<void> main(List<String> args) async {
   final server = Server(
     // [GreeterService(),EchoService()],
-    [AuthService(), EchoService()],
+    [AuthService(),EventService(db)],
     const <Interceptor>[authInterceptor],
     CodecRegistry(codecs: const [
       GzipCodec(),

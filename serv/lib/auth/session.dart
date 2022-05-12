@@ -3,10 +3,8 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:openid_client/openid_client.dart';
-/**
- * A simple session manager
- */
 
+/// A simple session manager
 
 final _random = Random.secure();
 
@@ -28,8 +26,8 @@ class Session {
   // Get the random session id
   String get id => _id;
   DateTime _expiryTime;
-  OpenIdClaims _claims;
-  String _uid;
+  final OpenIdClaims _claims;
+  final String _uid;
 
   // Get the user id associated with this session
   String get uid => _uid;

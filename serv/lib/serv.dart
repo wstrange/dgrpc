@@ -1,2 +1,4 @@
 export 'auth/session.dart';
-export 'svc/events.dart';
+export  'auth/auth.dart';
+
+export 'svc/event.dart';

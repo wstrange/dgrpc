@@ -1,5 +1,5 @@
-import 'event.dart';
+import 'event_db.dart';
 
 -- Postgres...
 -- CREATE INDEX person_email_idx ON persons (email);
-CREATE UNIQUE INDEX "person_email_idx" ON "persons" ( "email" );
+-- CREATE UNIQUE INDEX "person_email_idx" ON "persons" ( "email" );

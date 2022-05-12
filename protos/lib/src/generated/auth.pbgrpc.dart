@@ -19,6 +19,11 @@ class AuthServiceClient extends $grpc.Client {
           '/dgrpc.AuthService/Authenticate',
           ($0.AuthRequest value) => value.writeToBuffer(),
           ($core.List<$core.int> value) => $0.AuthResponse.fromBuffer(value));
+  static final _$authenticateLocal =
+      $grpc.ClientMethod<$0.AuthRequest, $0.AuthResponse>(
+          '/dgrpc.AuthService/AuthenticateLocal',
+          ($0.AuthRequest value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) => $0.AuthResponse.fromBuffer(value));
 
   AuthServiceClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
@@ -28,6 +33,12 @@ class AuthServiceClient extends $grpc.Client {
   $grpc.ResponseFuture<$0.AuthResponse> authenticate($0.AuthRequest request,
       {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$authenticate, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.AuthResponse> authenticateLocal(
+      $0.AuthRequest request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$authenticateLocal, request, options: options);
   }
 }
 
@@ -42,6 +53,13 @@ abstract class AuthServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.AuthRequest.fromBuffer(value),
         ($0.AuthResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.AuthRequest, $0.AuthResponse>(
+        'AuthenticateLocal',
+        authenticateLocal_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.AuthRequest.fromBuffer(value),
+        ($0.AuthResponse value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.AuthResponse> authenticate_Pre(
@@ -49,6 +67,13 @@ abstract class AuthServiceBase extends $grpc.Service {
     return authenticate(call, await request);
   }
 
+  $async.Future<$0.AuthResponse> authenticateLocal_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.AuthRequest> request) async {
+    return authenticateLocal(call, await request);
+  }
+
   $async.Future<$0.AuthResponse> authenticate(
+      $grpc.ServiceCall call, $0.AuthRequest request);
+  $async.Future<$0.AuthResponse> authenticateLocal(
       $grpc.ServiceCall call, $0.AuthRequest request);
 }
