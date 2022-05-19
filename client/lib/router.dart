@@ -35,8 +35,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       // // At this point, IF we're in the login page, go to the home page
       // // if (areWeLoggingIn) return '/';
       // if(areWeLoggingIn) return '/profile';
-      if( state.location != '/profile')
+      if( state.location != '/profile') {
         return '/profile';
+      }
 
       // There's no need for a redirect at this point.
       return null;

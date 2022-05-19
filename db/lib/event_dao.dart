@@ -1,7 +1,4 @@
 import 'package:db/db.dart';
-
-import 'event_db.dart';
-import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 
 part 'event_dao.g.dart';
@@ -12,15 +9,13 @@ class EventDao extends DatabaseAccessor<Database> with _$EventDaoMixin {
 
   // Person sp wants to create an event ev
   Future<int> addEvent(SectionPersonEntry sp, EventsCompanion ev) async {
+
+    dbLog.finest('addEvent person = $sp, event = $ev');
     // Check the event criteria
-    // if (!sp.canCreateEvent(sectionId: ev.sectionId.value)) {
-    //   throw Exception(
-    //       'This person is not a leader or admin for the section ${ev.sectionId}');
-    // }
-
-    // auto set some fields
-    // var e = ev.copyWith(createdAt: DateTime.now(), createdByPersonId: sp.person.id);
-
+    if (!sp.canCreateEvent(sectionId: ev.sectionId.value)) {
+      throw Exception(
+          'This person is not a leader or admin for the section ${ev.sectionId}');
+    }
     // returns the id of the entry
     var r = await db.into(db.events).insert(ev);
     return r;

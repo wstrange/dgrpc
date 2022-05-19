@@ -1,6 +1,4 @@
 import 'package:db/person_dao.dart';
-import 'package:drift/drift.dart';
-
 import 'event_db.dart';
 import 'dart:math';
 // Create some sample data...
@@ -11,7 +9,7 @@ final _numEvents = 100;
 
 final rand = Random();
 
-String gen_ssid() => rand.nextInt(10000000).toString();
+String genId() => rand.nextInt(10000000).toString();
 
 class SeedData {
   Database db;
@@ -39,19 +37,19 @@ class SeedData {
         sectionRole: SectionRole.admin));
 
     var uid = await db.into(db.persons).insert(PersonsCompanion.insert(
-        email: 'admin_$sectionId@test.com', ssid: gen_ssid()));
+        email: 'admin_$sectionId@test.com', ssid: genId()));
     // create role entry for admin
     await db.into(db.sectionPersons).insert(SectionPersonsCompanion.insert(
         personId: uid, sectionId: sectionId, sectionRole: SectionRole.admin));
 
     uid = await db.into(db.persons).insert(PersonsCompanion.insert(
-        email: 'leader_$sectionId@test.com', ssid: gen_ssid()));
+        email: 'leader_$sectionId@test.com', ssid: genId()));
     await db.into(db.sectionPersons).insert(SectionPersonsCompanion.insert(
         personId: uid, sectionId: sectionId, sectionRole: SectionRole.leader));
     // create members
     for (var i = 0; i < _numUsers; ++i) {
       var uid = await db.into(db.persons).insert(PersonsCompanion.insert(
-          email: 'member${i}_$sectionId@test.com', ssid: gen_ssid()));
+          email: 'member${i}_$sectionId@test.com', ssid: genId()));
       await db.into(db.sectionPersons).insert(SectionPersonsCompanion.insert(
           personId: uid, sectionId: sectionId, sectionRole: SectionRole.admin));
     }
@@ -70,6 +68,8 @@ class SeedData {
       // registrationStartTime:  now, startTime: now, id: Value.absent());
 
       var ec = EventsCompanion.insert(
+          maxParticipants: 4,
+          minParticipants: 1,
           description: 'test $sectionId at $now', title: 'test $sectionId',
           sectionId: sectionId, createdByPersonId: superAdminId,
           createdAt: now, endTime:  now, registrationEndTime:  now,

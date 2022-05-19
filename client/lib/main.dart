@@ -58,7 +58,7 @@ class AuthExampleApp extends ConsumerWidget {
 
     // var u = ref.watch(authStateChangesProvider);
     // u.whenData((d) => developer.log('got data $d'));
-    var s = ref.watch(sessionChangeProvider).whenData((s) => developer.log('got session $s'));
+    ref.watch(sessionChangeProvider).whenData((s) => developer.log('got session $s'));
 
     return MaterialApp(
       title: 'Firebase Example App',

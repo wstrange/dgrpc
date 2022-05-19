@@ -1,6 +1,6 @@
 import 'package:openid_client/openid_client.dart';
 import 'package:test/test.dart';
-import 'package:serv/auth/session.dart';
+import 'package:serv/serv.dart';
 
 main() {
 

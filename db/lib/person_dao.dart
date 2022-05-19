@@ -20,8 +20,9 @@ class PersonDao extends DatabaseAccessor<Database> with _$PersonDaoMixin {
     var q = select(persons)..where( (p) => p.email.equals(email) | p.ssid.equals(ssid));
     var p = await q.watchSingleOrNull().first;
     print('got person $p');
-    if ( p == null)
+    if ( p == null) {
       return null;
+    }
     // Find all the sections they belong to
     var q2 = select(sectionPersons)..where( (s) => s.personId.equals(p.id));
     var l = await q2.get();
@@ -56,11 +57,13 @@ class SectionPersonEntry {
   // true if a person can create an event for a sectionId
   bool canCreateEvent({required int sectionId}) {
     var s = sections.firstWhereOrNull((s) => s.sectionId == sectionId );
-    if( s != null && (s.sectionRole == SectionRole.admin || s.sectionRole == SectionRole.leader))
+    if( s != null && (s.sectionRole == SectionRole.admin || s.sectionRole == SectionRole.leader)) {
       return true;
+    }
     return false;
   }
 
+  @override
   String toString() => 'SectionPersonEntry($person,$sections)';
 }
 

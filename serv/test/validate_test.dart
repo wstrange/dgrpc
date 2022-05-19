@@ -13,14 +13,15 @@ final otoken =
 var id =
     '247079421360-pehpq1dvjbt1990c2h4sdot1tmt11ifk.apps.googleusercontent.com';
 
-final firebase_id = 'dgrpc-87463';
+final firebaseId = 'dgrpc-87463';
 final secret = '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';
 
 main() {
   test('validate idtoken', () async {
-    var validator = TokenValidator(firebase_id);
+    var validator = TokenValidator(firebaseId);
     // Validate that the jwt token has been issued and signed by Firebase
     var info = await validator.validate(token,
         validateClaims: true, validateExpiry: false);
+    print(info);
   });
 }

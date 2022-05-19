@@ -1,8 +1,8 @@
 import 'package:openid_client/openid_client.dart';
 
 class TokenInfo {
-  List<String> _validationErrors;
-  OpenIdClaims _claims;
+  final List<String> _validationErrors;
+  final OpenIdClaims _claims;
   TokenInfo(this._claims, this._validationErrors);
 
   bool hasErrors() => _validationErrors.isNotEmpty;
@@ -13,6 +13,7 @@ class TokenInfo {
 
   String get uid => _claims.subject;
 
+  @override
   String toString() =>
       'TokenInfo(errors=$_validationErrors, $_claims)';
 }
@@ -28,7 +29,7 @@ class TokenValidator {
   // Returns a list of violation error messages. If the list is empty.
   // there are no validation errors and the token is valid.
   Future<TokenInfo> validate(String token,
-      {validateClaims: true, validateExpiry: true}) async {
+      {validateClaims = true, validateExpiry = true}) async {
     _issuer ??= await Issuer.discover(Issuer.firebase(_firebaseId));
 
     var client = Client(_issuer!, _firebaseId);

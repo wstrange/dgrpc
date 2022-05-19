@@ -14,18 +14,24 @@
 // limitations under the License.
 
 /// Dart implementation of the gRPC helloworld.Greeter server.
-
-import 'package:db/db.dart';
 import 'package:grpc/grpc.dart';
 import 'package:serv/serv.dart';
+import 'package:logging/logging.dart';
 
-final db = Database();
 
 Future<void> main(List<String> args) async {
+
+  Logger.root.level = Level.ALL; // defaults to Level.INFO
+  Logger.root.onRecord.listen((record) {
+    print('${record.level.name}: ${record.loggerName} ${record.time}: ${record.message}');
+  });
+
   final server = Server(
     // [GreeterService(),EchoService()],
     [AuthService(),EventService(db)],
-    const <Interceptor>[authInterceptor],
+    // chained interceptor does not appear to work... See
+    // https://github.com/grpc/grpc-dart/issues/424
+    const <Interceptor>[authInterceptor, /* dbInterceptor */],
     CodecRegistry(codecs: const [
       GzipCodec(),
       // IdentityCodec(),  // Breaks grpc web. See https://github.com/grpc/grpc-dart/issues/506

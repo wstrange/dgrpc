@@ -1,11 +1,10 @@
 import 'dart:io';
 import 'package:path/path.dart' as p;
-
 import 'package:drift/drift.dart';
 // import 'package:drift_postgres/postgres.dart';
 import 'package:drift/native.dart';
 // import 'package:postgres/postgres.dart';
-
+import 'package:logging/logging.dart';
 import 'person_dao.dart';
 import 'section_dao.dart';
 import 'event_dao.dart';
@@ -13,6 +12,8 @@ import 'event_dao.dart';
 // assuming that your file is called filename.dart. This will give an error at
 // first, but it's needed for db to know about the generated code
 part 'event_db.g.dart';
+
+var dbLog = Logger('db');
 
 enum SectionRole {
   member, // a member. Can sign up for events
@@ -50,6 +51,9 @@ class Events extends Table {
   DateTimeColumn get registrationEndTime => dateTime()();
   IntColumn get createdByPersonId => integer().references(Persons, #id)();
   IntColumn get sectionId => integer().references(Sections, #id)();
+  IntColumn get maxParticipants => integer()();
+  IntColumn get minParticipants => integer()();
+
 }
 
 
@@ -107,7 +111,10 @@ final String dbFolder = p.join('/Users/warren/src/dart/dgrpc/db', 'db.sqlite');
 nukeDB() {
   try {
     File(dbFolder).deleteSync();
-  } catch (e) {}
+  // ignore: empty_catches
+  } catch (e) {
+
+  }
 }
 
 LazyDatabase _openConnection() {

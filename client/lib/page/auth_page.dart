@@ -40,6 +40,8 @@ class ScaffoldSnackbar {
 }
 
 class AuthPage extends ConsumerWidget {
+  const AuthPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return const Scaffold(body: AuthGate());
@@ -345,9 +347,11 @@ class _AuthGateState extends State<AuthGate> {
 
     if (email != null) {
       try {
-        await _auth.sendPasswordResetEmail(email: email!);
+        _auth.sendPasswordResetEmail(email: email!);
+        if(!mounted) return;
         ScaffoldSnackbar.of(context).show('Password reset email is sent');
       } catch (e) {
+        if( !mounted) return;
         ScaffoldSnackbar.of(context).show('Error resetting');
       }
     }

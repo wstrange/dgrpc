@@ -17,6 +17,8 @@ const placeholderImage =
     'https://upload.wikimedia.org/wikipedia/commons/c/cd/Portrait_Placeholder_Square.png';
 
 class ProfilePage extends ConsumerWidget {
+  const ProfilePage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.read(authStateChangesProvider);
@@ -75,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void printWrapped(String text) {
-    final pattern = new RegExp('.{1,800}'); // 800 is the size of each chunk
+    final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 
@@ -281,7 +283,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _validateIdToken() async {
     var t = await user.getIdToken(false);
     // print('validate token $t');
-    AuthServiceClient _service;
 
     final channel =
         GrpcWebClientChannel.xhr(Uri.parse('http://localhost:8080'));
@@ -296,13 +297,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         'Response from svc = id= ${response.sessionId} ${response.error} ${response.messages}');
 
     // now do a session call
-    final echoSvc = EchoServiceClient(channel);
+    // final echoSvc = EchoServiceClient(channel);
     var options = CallOptions(metadata: {'authorization': response.sessionId});
 
     try {
-      final r =
-      await echoSvc.echo(EchoRequest(message: 'Hello'), options: options);
-      print('echo response = $r');
+      // final r =
+      // await echoSvc.echo(EchoRequest(message: 'Hello'), options: options);
+      // print('echo response = $r');
     }
     catch(e) {
       print(e);

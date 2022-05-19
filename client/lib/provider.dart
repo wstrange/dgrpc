@@ -27,8 +27,9 @@ final sessionChangeProvider = StreamProvider<String>((ref)  {
 
   ref.watch(firebaseAuthProvider).authStateChanges().listen( (u) async {
     var s = "anonymous";
-    if( u != null)
+    if( u != null) {
       s = await _authenticateServer(u);
+    }
     controller.add(s);
   });
   return controller.stream;

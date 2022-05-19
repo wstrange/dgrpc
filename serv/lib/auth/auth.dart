@@ -2,9 +2,11 @@ import 'package:protos/protos.dart';
 import 'token_validator.dart';
 import 'package:grpc/grpc.dart';
 import 'package:openid_client/openid_client.dart';
-
-import 'session.dart';
+import 'package:logging/logging.dart';
+import '../serv.dart';
 import 'dart:async';
+
+var _log = Logger('AuthService');
 
 final _firebaseId = 'dgrpc-87463';
 final validator = TokenValidator(_firebaseId);
@@ -24,7 +26,7 @@ class AuthService extends AuthServiceBase {
         response.error = AuthResponse_AuthErrors.ERROR;
         response.messages.addAll(tokenInfo.validationErrors());
       } else {
-        // create a session. TODO - check to see if we already have a session..
+        // create a session, or get an existing one
         var s = sessionManager.createSession(claims: tokenInfo.claims);
         response.sessionId = s.id;
       }
@@ -55,14 +57,14 @@ class AuthService extends AuthServiceBase {
 
 FutureOr<GrpcError?> authInterceptor(
     ServiceCall call, ServiceMethod method) async {
-  print('Intercept: $call, $method  name: ${method.name}');
+  _log.finest('Intercept: $call, $method  name: ${method.name}');
 
   // The authenticate method does not require a session.
   // The id token request is carried inbound in the request payload
   if (method.name != 'Authenticate' && method.name != 'AuthenticateLocal') {
-    print('check for session');
+    _log.finest('check for session');
     var auth = call.clientMetadata?['authorization'];
-    print('auth header = $auth');
+    _log.finest('auth header = $auth');
 
     if (auth == null) {
       return GrpcError.unauthenticated('Authentication header not found!');
@@ -72,7 +74,7 @@ FutureOr<GrpcError?> authInterceptor(
     if (session == null) {
       return GrpcError.unauthenticated('Session expired or not found');
     }
-    call.clientMetadata!['session'] = session.id;
+    call.clientMetadata!['session_id'] = session.id;
     call.clientMetadata!['uid'] = session.uid;
   }
   // no errors - just pass the call on.
