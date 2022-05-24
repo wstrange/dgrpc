@@ -20,9 +20,13 @@ message Event {
 }
 
 message EventLookupRequest {
+    // the section to lookup events
     int32 section_id = 1;
+    // Events between theses dates.
     google.protobuf.Timestamp from_ts = 2;
     google.protobuf.Timestamp to_ts = 3;
+    // The id of the creator. 0 means any creator
+    int32 createdByPersonId = 4;
 }
 
 
@@ -39,7 +43,23 @@ message EventCreateResponse {
     dgrpc.Status status = 1;
 }
 
+message PersonInfo {
+    string email = 1;
+    int32 id = 2;
+
+}
+message PersonLookupRequest {
+    // array of persons to lookup
+    repeated int32 personIds = 1;
+}
+
+message PersonLookupResponse {
+    dgrpc.Status status = 1;
+    repeated PersonInfo personInfos = 2;
+}
+
 service EventService {
     rpc GetEvents(EventLookupRequest) returns (EventLookupResponse);
     rpc CreateEvent(EventCreateRequest) returns (EventCreateResponse);
+    rpc PersonLookup(PersonLookupRequest) returns (PersonLookupResponse);
 }

@@ -28,7 +28,7 @@ Future<void> main(List<String> args) async {
 
   final server = Server(
     // [GreeterService(),EchoService()],
-    [AuthService(),EventService(db)],
+    [AuthService(db),EventService(db)],
     // chained interceptor does not appear to work... See
     // https://github.com/grpc/grpc-dart/issues/424
     const <Interceptor>[authInterceptor, /* dbInterceptor */],

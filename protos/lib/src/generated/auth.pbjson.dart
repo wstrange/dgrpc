@@ -23,8 +23,9 @@ const AuthResponse$json = const {
   '1': 'AuthResponse',
   '2': const [
     const {'1': 'session_id', '3': 1, '4': 1, '5': 9, '10': 'sessionId'},
-    const {'1': 'error', '3': 2, '4': 1, '5': 14, '6': '.dgrpc.AuthResponse.AuthErrors', '10': 'error'},
-    const {'1': 'messages', '3': 3, '4': 3, '5': 9, '10': 'messages'},
+    const {'1': 'personId', '3': 2, '4': 1, '5': 5, '10': 'personId'},
+    const {'1': 'error', '3': 3, '4': 1, '5': 14, '6': '.dgrpc.AuthResponse.AuthErrors', '10': 'error'},
+    const {'1': 'messages', '3': 4, '4': 3, '5': 9, '10': 'messages'},
   ],
   '4': const [AuthResponse_AuthErrors$json],
 };
@@ -35,8 +36,9 @@ const AuthResponse_AuthErrors$json = const {
   '2': const [
     const {'1': 'OK', '2': 0},
     const {'1': 'ERROR', '2': 1},
+    const {'1': 'NO_USER_IN_DB', '2': 2},
   ],
 };
 
 /// Descriptor for `AuthResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List authResponseDescriptor = $convert.base64Decode('CgxBdXRoUmVzcG9uc2USHQoKc2Vzc2lvbl9pZBgBIAEoCVIJc2Vzc2lvbklkEjQKBWVycm9yGAIgASgOMh4uZGdycGMuQXV0aFJlc3BvbnNlLkF1dGhFcnJvcnNSBWVycm9yEhoKCG1lc3NhZ2VzGAMgAygJUghtZXNzYWdlcyIfCgpBdXRoRXJyb3JzEgYKAk9LEAASCQoFRVJST1IQAQ==');
+final $typed_data.Uint8List authResponseDescriptor = $convert.base64Decode('CgxBdXRoUmVzcG9uc2USHQoKc2Vzc2lvbl9pZBgBIAEoCVIJc2Vzc2lvbklkEhoKCHBlcnNvbklkGAIgASgFUghwZXJzb25JZBI0CgVlcnJvchgDIAEoDjIeLmRncnBjLkF1dGhSZXNwb25zZS5BdXRoRXJyb3JzUgVlcnJvchIaCghtZXNzYWdlcxgEIAMoCVIIbWVzc2FnZXMiMgoKQXV0aEVycm9ycxIGCgJPSxAAEgkKBUVSUk9SEAESEQoNTk9fVVNFUl9JTl9EQhAC');

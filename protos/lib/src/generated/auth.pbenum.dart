@@ -12,10 +12,12 @@ import 'package:protobuf/protobuf.dart' as $pb;
 class AuthResponse_AuthErrors extends $pb.ProtobufEnum {
   static const AuthResponse_AuthErrors OK = AuthResponse_AuthErrors._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'OK');
   static const AuthResponse_AuthErrors ERROR = AuthResponse_AuthErrors._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ERROR');
+  static const AuthResponse_AuthErrors NO_USER_IN_DB = AuthResponse_AuthErrors._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'NO_USER_IN_DB');
 
   static const $core.List<AuthResponse_AuthErrors> values = <AuthResponse_AuthErrors> [
     OK,
     ERROR,
+    NO_USER_IN_DB,
   ];
 
   static final $core.Map<$core.int, AuthResponse_AuthErrors> _byValue = $pb.ProtobufEnum.initByValue(values);

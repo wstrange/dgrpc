@@ -1,3 +1,4 @@
+import 'package:db/db.dart';
 import 'package:protos/protos.dart';
 import 'token_validator.dart';
 import 'package:grpc/grpc.dart';
@@ -12,6 +13,10 @@ final _firebaseId = 'dgrpc-87463';
 final validator = TokenValidator(_firebaseId);
 
 class AuthService extends AuthServiceBase {
+  final Database _db;
+
+  AuthService(this._db);
+
   @override
   Future<AuthResponse> authenticate(
       ServiceCall call, AuthRequest request) async {
@@ -29,6 +34,9 @@ class AuthService extends AuthServiceBase {
         // create a session, or get an existing one
         var s = sessionManager.createSession(claims: tokenInfo.claims);
         response.sessionId = s.id;
+        // todo: Lookup the users person id...
+        var pe = await _getPersonEntry(s.uid);
+
       }
     } catch (e) {
       print('validation error $e');
@@ -47,11 +55,25 @@ class AuthService extends AuthServiceBase {
       var s = sessionManager.createSession(claims: claims);
       response.error = AuthResponse_AuthErrors.OK;
       response.sessionId = s.id;
+      var pe = await _getPersonEntry(s.uid);
+      if( pe == null ) {
+        _log.info('User does not exist in the db');
+        response.error = AuthResponse_AuthErrors.NO_USER_IN_DB;
+        response.messages.add('User does not exist in the database');
+        return response;
+      }
+      _log.finest('Person entry ${pe}');
+      response.personId = pe.person.id;
     } else {
       response.error = AuthResponse_AuthErrors.ERROR;
       response.messages.add('Cant create local session');
     }
     return response;
+  }
+
+  Future<SectionPersonEntry?> _getPersonEntry(String ssid) async {
+    var pe = await _db.personDao.getPersonEntry(ssid: ssid);
+    return pe;
   }
 }
 

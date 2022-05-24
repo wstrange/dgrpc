@@ -13,7 +13,7 @@ class EventDao extends DatabaseAccessor<Database> with _$EventDaoMixin {
     dbLog.finest('addEvent person = $sp, event = $ev');
     // Check the event criteria
     if (!sp.canCreateEvent(sectionId: ev.sectionId.value)) {
-      throw Exception(
+      throw DatabaseException(
           'This person is not a leader or admin for the section ${ev.sectionId}');
     }
     // returns the id of the entry

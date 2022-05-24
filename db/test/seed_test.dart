@@ -1,5 +1,6 @@
 import 'package:test/test.dart';
 import 'package:db/db.dart';
+import 'seed.dart';
 
 void main() {
   late Database db;

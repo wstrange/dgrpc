@@ -63,20 +63,25 @@ class AuthRequest extends $pb.GeneratedMessage {
 class AuthResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AuthResponse', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'dgrpc'), createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'sessionId')
-    ..e<AuthResponse_AuthErrors>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'error', $pb.PbFieldType.OE, defaultOrMaker: AuthResponse_AuthErrors.OK, valueOf: AuthResponse_AuthErrors.valueOf, enumValues: AuthResponse_AuthErrors.values)
-    ..pPS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'messages')
+    ..a<$core.int>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'personId', $pb.PbFieldType.O3, protoName: 'personId')
+    ..e<AuthResponse_AuthErrors>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'error', $pb.PbFieldType.OE, defaultOrMaker: AuthResponse_AuthErrors.OK, valueOf: AuthResponse_AuthErrors.valueOf, enumValues: AuthResponse_AuthErrors.values)
+    ..pPS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'messages')
     ..hasRequiredFields = false
   ;
 
   AuthResponse._() : super();
   factory AuthResponse({
     $core.String? sessionId,
+    $core.int? personId,
     AuthResponse_AuthErrors? error,
     $core.Iterable<$core.String>? messages,
   }) {
     final _result = create();
     if (sessionId != null) {
       _result.sessionId = sessionId;
+    }
+    if (personId != null) {
+      _result.personId = personId;
     }
     if (error != null) {
       _result.error = error;
@@ -117,15 +122,24 @@ class AuthResponse extends $pb.GeneratedMessage {
   void clearSessionId() => clearField(1);
 
   @$pb.TagNumber(2)
-  AuthResponse_AuthErrors get error => $_getN(1);
+  $core.int get personId => $_getIZ(1);
   @$pb.TagNumber(2)
-  set error(AuthResponse_AuthErrors v) { setField(2, v); }
+  set personId($core.int v) { $_setSignedInt32(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasError() => $_has(1);
+  $core.bool hasPersonId() => $_has(1);
   @$pb.TagNumber(2)
-  void clearError() => clearField(2);
+  void clearPersonId() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.List<$core.String> get messages => $_getList(2);
+  AuthResponse_AuthErrors get error => $_getN(2);
+  @$pb.TagNumber(3)
+  set error(AuthResponse_AuthErrors v) { setField(3, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasError() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearError() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.List<$core.String> get messages => $_getList(3);
 }
 

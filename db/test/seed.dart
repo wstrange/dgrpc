@@ -1,5 +1,5 @@
 import 'package:db/person_dao.dart';
-import 'event_db.dart';
+import '../lib/event_db.dart';
 import 'dart:math';
 // Create some sample data...
 
