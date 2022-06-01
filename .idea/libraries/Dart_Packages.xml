@@ -194,9 +194,10 @@
         <entry key="crypto">
           <value>
             <list>
-              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/crypto-3.0.1/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/crypto-3.0.2/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/crypto-3.0.1/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/crypto-3.0.2/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/crypto-3.0.1/lib" />
             </list>
           </value>
         </entry>
@@ -260,21 +261,21 @@
         <entry key="firebase_auth">
           <value>
             <list>
-              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-3.3.15/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-3.3.18/lib" />
             </list>
           </value>
         </entry>
         <entry key="firebase_auth_platform_interface">
           <value>
             <list>
-              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_platform_interface-6.2.4/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_platform_interface-6.2.6/lib" />
             </list>
           </value>
         </entry>
         <entry key="firebase_auth_web">
           <value>
             <list>
-              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-3.3.13/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-3.3.15/lib" />
             </list>
           </value>
         </entry>
@@ -302,8 +303,9 @@
         <entry key="fixnum">
           <value>
             <list>
-              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/fixnum-1.0.0/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/fixnum-1.0.1/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/fixnum-1.0.0/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/fixnum-1.0.0/lib" />
             </list>
           </value>
         </entry>
@@ -311,6 +313,13 @@
           <value>
             <list>
               <option value="$USER_HOME$/dev/flutter/packages/flutter/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="flutter_hooks">
+          <value>
+            <list>
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_hooks-0.18.4/lib" />
             </list>
           </value>
         </entry>
@@ -324,7 +333,7 @@
         <entry key="flutter_riverpod">
           <value>
             <list>
-              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_riverpod-1.0.3/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_riverpod-1.0.4/lib" />
             </list>
           </value>
         </entry>
@@ -375,50 +384,51 @@
         <entry key="go_router">
           <value>
             <list>
-              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/go_router-3.0.7/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/go_router-3.1.0/lib" />
             </list>
           </value>
         </entry>
         <entry key="google_sign_in">
           <value>
             <list>
-              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in-5.3.0/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in-5.3.2/lib" />
             </list>
           </value>
         </entry>
         <entry key="google_sign_in_android">
           <value>
             <list>
-              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_android-5.2.5/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_android-5.2.8/lib" />
             </list>
           </value>
         </entry>
         <entry key="google_sign_in_ios">
           <value>
             <list>
-              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_ios-5.2.5/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_ios-5.3.1/lib" />
             </list>
           </value>
         </entry>
         <entry key="google_sign_in_platform_interface">
           <value>
             <list>
-              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_platform_interface-2.1.2/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_platform_interface-2.1.3/lib" />
             </list>
           </value>
         </entry>
         <entry key="google_sign_in_web">
           <value>
             <list>
-              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_web-0.10.1/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_web-0.10.1+2/lib" />
             </list>
           </value>
         </entry>
         <entry key="googleapis_auth">
           <value>
             <list>
-              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/googleapis_auth-1.3.0/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/googleapis_auth-1.3.1/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/googleapis_auth-1.3.0/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/googleapis_auth-1.3.0/lib" />
             </list>
           </value>
         </entry>
@@ -434,6 +444,13 @@
             <list>
               <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/grpc-3.0.2/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/grpc-3.0.2/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="hooks_riverpod">
+          <value>
+            <list>
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/hooks_riverpod-1.0.4/lib" />
             </list>
           </value>
         </entry>
@@ -471,8 +488,9 @@
         <entry key="http_parser">
           <value>
             <list>
-              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.0/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.1/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.0/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.0/lib" />
             </list>
           </value>
         </entry>
@@ -641,7 +659,7 @@
         <entry key="quiver">
           <value>
             <list>
-              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/quiver-3.0.1+1/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/quiver-3.1.0/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/quiver-3.0.1+1/lib" />
             </list>
           </value>
@@ -839,15 +857,16 @@
         <entry key="twitter_login">
           <value>
             <list>
-              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/twitter_login-4.2.2/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/twitter_login-4.2.3/lib" />
             </list>
           </value>
         </entry>
         <entry key="typed_data">
           <value>
             <list>
-              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.0/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.1/lib" />
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.0/lib" />
+              <option value="$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.0/lib" />
             </list>
           </value>
         </entry>
@@ -1021,34 +1040,40 @@
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/convert-3.0.1/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/coverage-1.2.0/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/crypto-3.0.1/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/crypto-3.0.2/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/dio-4.0.6/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.3.0/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/file-6.1.2/lib" />
-      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-3.3.15/lib" />
-      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_platform_interface-6.2.4/lib" />
-      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-3.3.13/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-3.3.18/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_platform_interface-6.2.6/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-3.3.15/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-1.17.0/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_platform_interface-4.4.0/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-1.6.4/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/fixnum-1.0.0/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/fixnum-1.0.1/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_hooks-0.18.4/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_lints-2.0.1/lib" />
-      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_riverpod-1.0.3/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_riverpod-1.0.4/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_signin_button-2.0.0/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/font_awesome_flutter-9.2.0/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/frontend_server_client-2.1.2/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/glob-2.0.2/lib" />
-      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/go_router-3.0.7/lib" />
-      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in-5.3.0/lib" />
-      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_android-5.2.5/lib" />
-      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_ios-5.2.5/lib" />
-      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_platform_interface-2.1.2/lib" />
-      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_web-0.10.1/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/go_router-3.1.0/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in-5.3.2/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_android-5.2.8/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_ios-5.3.1/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_platform_interface-2.1.3/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_web-0.10.1+2/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/googleapis_auth-1.3.0/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/googleapis_auth-1.3.1/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/grpc-3.0.2/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/hooks_riverpod-1.0.4/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/http-0.13.4/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/http2-2.0.0/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/http_multi_server-3.2.0/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.0/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.1/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.17.0/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/io-1.0.3/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/js-0.6.4/lib" />
@@ -1065,7 +1090,7 @@
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/pool-1.5.0/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/protobuf-2.0.1/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/pub_semver-2.1.1/lib" />
-      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/quiver-3.0.1+1/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/quiver-3.1.0/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/riverpod-1.0.3/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/shelf-1.3.0/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/shelf_packages_handler-3.0.0/lib" />
@@ -1083,8 +1108,9 @@
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/test-1.21.0/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/test_api-0.4.9/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/test_core-0.4.13/lib" />
-      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/twitter_login-4.2.2/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/twitter_login-4.2.3/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.0/lib" />
+      <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.1/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/vector_math-2.1.2/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/vm_service-8.2.2/lib" />
       <root url="file://$USER_HOME$/dev/flutter/.pub-cache/hosted/pub.dartlang.org/watcher-1.0.1/lib" />

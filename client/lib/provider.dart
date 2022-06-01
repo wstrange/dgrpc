@@ -14,20 +14,20 @@ final authStateChangesProvider = StreamProvider<User?>((ref) {
 });
 
 // works...
-final userProvider = Provider<User?>( (ref){
+final userProvider = Provider<User?>((ref) {
   final a = ref.watch(authStateChangesProvider);
   var u = a.asData?.value;
-  if( u?.uid != null ) {
+  if (u?.uid != null) {
     return u!;
   }
   return null;
 });
-final sessionChangeProvider = StreamProvider<String>((ref)  {
+final sessionChangeProvider = StreamProvider<String>((ref) {
   var controller = StreamController<String>();
 
-  ref.watch(firebaseAuthProvider).authStateChanges().listen( (u) async {
+  ref.watch(firebaseAuthProvider).authStateChanges().listen((u) async {
     var s = "anonymous";
-    if( u != null) {
+    if (u != null) {
       s = await _authenticateServer(u);
     }
     controller.add(s);
@@ -60,13 +60,40 @@ final sessionChangeProvider = StreamProvider<String>((ref)  {
 Future<String> _authenticateServer(User u) async {
   var t = await u.getIdToken(false);
   // user is not null - try to get a session id;
-  final response = await _service.authenticate(AuthRequest()..idToken = t);
+  final response = await _authService.authenticate(AuthRequest()..idToken = t);
   developer.log(
       'Response from svc = id= ${response.sessionId} ${response.error} ${response.messages}');
   return response.sessionId;
 }
 
+final eventServiceProvider =
+    FutureProvider<EventServiceClient>((ref)  async {
+      // todo: this should watch registered users...
+      // var u = ref.watch(userProvider);
+
+      // HACK HACK...
+      var ec = AuthRequest(idToken: 'admin');
+      var response = await _authService.authenticateLocal(ec);
+      // print('Got session = ${response.sessionId} personId = ${response.personId}');
+      var options = CallOptions(
+          // compression: const GzipCodec(),
+          metadata: {'authorization': response.sessionId});
+
+      return EventServiceClient(_channel, options: options);
+    });
+
+final sectionIdProvider = StateProvider<int>((ref) => 1);
+
+final currentEventsProvider = FutureProvider<List<Event>>((ref) async {
+  var sectionId = ref.watch(sectionIdProvider);
+  var evp = await ref.watch(eventServiceProvider.future);
+  var req = EventLookupRequest(sectionId: sectionId);
+
+  var resp = await evp.getEvents(req);
+
+  return resp.events;
+  });
+
 final _channel = GrpcWebClientChannel.xhr(Uri.parse('http://localhost:8080'));
-final _service = AuthServiceClient(_channel);
-
-
+final _authService = AuthServiceClient(_channel);
+final _eventService = EventServiceClient(_channel);

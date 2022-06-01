@@ -1,13 +1,14 @@
+import 'package:client/page/create_event_form.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:developer' as developer;
 import 'page/auth_page.dart';
+import 'page/events_page.dart';
 import 'page/home_page.dart';
 import 'page/profile_page.dart';
 import 'provider.dart';
-
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -21,7 +22,6 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       developer.log('state ${state.location} user $user');
 
-
       // From here we can use the state and implement our custom logic
       final areWeLoggingIn = state.location == '/login';
 
@@ -34,10 +34,10 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       // // At this point, IF we're in the login page, go to the home page
       // // if (areWeLoggingIn) return '/';
-      // if(areWeLoggingIn) return '/profile';
-      if( state.location != '/profile') {
-        return '/profile';
-      }
+      if(areWeLoggingIn) return '/';
+      // if( state.location != '/profile') {
+      //   return '/profile';
+      // }
 
       // There's no need for a redirect at this point.
       return null;
@@ -53,13 +53,22 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: "login",
         path: '/login',
-        builder: (context, _) =>  AuthPage(),
+        builder: (context, _) => AuthPage(),
       ),
       GoRoute(
         name: 'profile',
         path: '/profile',
         builder: (context, _) => ProfilePage(),
-      )
+      ),
+      GoRoute(
+        name: 'eventcreate',
+        path: '/eventcreate',
+        builder: (context, _) => CreateEventForm(),
+      ),
+      GoRoute(
+          name: 'events',
+          path: '/events',
+          builder: (context, _) => EventsPage()),
     ],
   );
 });
@@ -83,7 +92,7 @@ class RouterNotifier extends ChangeNotifier {
   RouterNotifier(this._ref) {
     _ref.listen<User?>(
       userProvider,
-          (_, __) => notifyListeners(),
+      (_, __) => notifyListeners(),
     );
   }
 }

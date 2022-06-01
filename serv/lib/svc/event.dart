@@ -37,6 +37,7 @@ class EventService extends EventServiceBase {
 
   // Create a protobuf event from an event created in the database
   Event dbEvent2Proto(db.Event e) => Event(
+        eventId: e.id,
         title: e.title,
         description: e.description,
         eventStartTs: Timestamp.fromDateTime(e.startTime),
