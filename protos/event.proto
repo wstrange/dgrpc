@@ -41,6 +41,16 @@ message EventCreateRequest {
 
 message EventCreateResponse {
     dgrpc.Status status = 1;
+    int32 event_id = 2; // The id of the newly created event
+}
+
+message EventDeleteRequest {
+    int32 event_id =1 ;
+}
+
+// Generic response
+message StatusResponse {
+    dgrpc.Status status = 1;
 }
 
 message PersonInfo {
@@ -61,5 +71,6 @@ message PersonLookupResponse {
 service EventService {
     rpc GetEvents(EventLookupRequest) returns (EventLookupResponse);
     rpc CreateEvent(EventCreateRequest) returns (EventCreateResponse);
+    rpc DeleteEvent(EventDeleteRequest) returns (StatusResponse);
     rpc PersonLookup(PersonLookupRequest) returns (PersonLookupResponse);
 }

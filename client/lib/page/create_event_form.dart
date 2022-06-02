@@ -1,14 +1,14 @@
-import 'package:client/main.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
+import 'package:protos/protos.dart';
+import '../provider.dart';
 
 // Form to create an event..
 //
 class CreateEventForm extends HookConsumerWidget {
   CreateEventForm({Key? key}) : super(key: key);
-  final _now = DateTime.now();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -18,13 +18,40 @@ class CreateEventForm extends HookConsumerWidget {
     final eventStart = useState(DateTime.now());
     final eventEnd = useState(DateTime.now());
     final regStart = useState(DateTime.now());
-    final regEnd = useState(DateTime.now().add(Duration(days: 1)));
+    final regEnd = useState(DateTime.now().add(const Duration(days: 1)));
     final isValid = useState(false);
+
+    var _evp = ref.watch(eventServiceProvider);
+    var _sectionId = ref.read(sectionIdProvider);
 
     validate() {
       if( _formKey.currentState != null ) {
         isValid.value = _formKey.currentState!.validate() ? true : false;
       }
+    }
+
+    // Create the event - called once the form is valid
+    // If the create failed, return the error message, otherwise null
+    Future<String?> _submitCreateEvent(EventServiceClient ec) async {
+      var event = Event(title: title.text,
+        description: description.text,
+        eventStartTs: Timestamp.fromDateTime(eventStart.value),
+        eventEndTs: Timestamp.fromDateTime(eventEnd.value),
+        registerStartTs: Timestamp.fromDateTime(regStart.value),
+        registerEndTs: Timestamp.fromDateTime(regEnd.value),
+        // TODO: Pull the users id from the provider...
+        createdById: 1,
+        sectionId: _sectionId,
+        minParticipants: 2,
+        maxParticipants: 4,
+      );
+      var req = EventCreateRequest(event: event);
+
+      var res = await ec.createEvent(req);
+      print('create request result = ${res.status}');
+      if( res.status.code == 0)
+        return null;
+      return res.status.message;
     }
 
     return Scaffold(
@@ -46,7 +73,7 @@ class CreateEventForm extends HookConsumerWidget {
             },
             onChanged: (v) => validate(),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           TextFormField(
             decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -63,7 +90,7 @@ class CreateEventForm extends HookConsumerWidget {
             },
             onChanged: (v) =>  validate(),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           DateTimeSelector(
             eventStart.value,
             'Event Start',
@@ -74,7 +101,7 @@ class CreateEventForm extends HookConsumerWidget {
               }
             },
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           DateTimeSelector(
             eventEnd.value,
             'Event End',
@@ -82,7 +109,7 @@ class CreateEventForm extends HookConsumerWidget {
               eventEnd.value = d;
             },
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           DateTimeSelector(
             regStart.value,
             'Registration Start',
@@ -93,7 +120,7 @@ class CreateEventForm extends HookConsumerWidget {
               }
             },
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           DateTimeSelector(
             regEnd.value,
             'Registration End',
@@ -101,15 +128,27 @@ class CreateEventForm extends HookConsumerWidget {
               regEnd.value = d;
             },
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           ElevatedButton(
-            onPressed: isValid.value ? () => print('submit') : null,
+            onPressed: isValid.value ? () async {
+              _evp.whenData((e)  async {
+                var s = await _submitCreateEvent(e);
+                if( s == null ) {
+                  s = 'Event created';
+                }
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(s),));
+                _formKey.currentState!.reset();
+              });
+            } : null,
             child: const Text('Submit'),
           )
         ]),
       ),
     );
+
+
   }
+
 }
 
 class DateTimeSelector extends HookWidget {
@@ -128,7 +167,7 @@ class DateTimeSelector extends HookWidget {
   Widget build(BuildContext context) {
     print('build $label dateTime with $_dateTime');
     final date = useState(_dateTime);
-    final time = useState(TimeOfDay(hour: 7, minute: 0));
+    final time = useState(const TimeOfDay(hour: 7, minute: 0));
 
     return Row(children: [
       SizedBox(
@@ -138,7 +177,7 @@ class DateTimeSelector extends HookWidget {
         ),
         width: 120,
       ),
-      SizedBox(width: 10),
+      const SizedBox(width: 10),
       ElevatedButton(
           onPressed: () async {
             var later = _dateTime.add(const Duration(days: 365));
@@ -161,7 +200,7 @@ class DateTimeSelector extends HookWidget {
           // child: Text(_value2Date(date))),
           child: SizedBox(
               child: Text(DateFormat.yMEd().format(_dateTime)), width: 100)),
-      SizedBox(width: 5),
+      const SizedBox(width: 5),
       ElevatedButton(
           onPressed: () async {
             var stime =
@@ -180,12 +219,12 @@ class DateTimeSelector extends HookWidget {
           },
           child: Row(
             children: [
-              Icon(Icons.access_time),
-              SizedBox(width: 5),
+              const Icon(Icons.access_time),
+              const SizedBox(width: 5),
               Text(time.value.format(context)),
             ],
           )),
-      SizedBox(width: 10),
+      const SizedBox(width: 10),
     ]);
   }
 }

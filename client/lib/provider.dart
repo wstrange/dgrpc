@@ -82,13 +82,26 @@ final eventServiceProvider =
       return EventServiceClient(_channel, options: options);
     });
 
-final sectionIdProvider = StateProvider<int>((ref) => 1);
+// final sectionIdProvider = StateProvider<int>((ref) => 1);
+final sectionIdProvider = StateNotifierProvider<SelectedSection,int>((ref) =>
+    SelectedSection(ref)
+);
 
+class SelectedSection extends StateNotifier<int> {
+  SelectedSection(this.ref): super(1);
+  final Ref ref;
+  void setSectionId(int id) {
+    state = id;
+  }
+}
+
+// TODO: This probably does not qualify as a provider - too specific
 final currentEventsProvider = FutureProvider<List<Event>>((ref) async {
   var sectionId = ref.watch(sectionIdProvider);
   var evp = await ref.watch(eventServiceProvider.future);
   var req = EventLookupRequest(sectionId: sectionId);
 
+  print('events provder updated...');
   var resp = await evp.getEvents(req);
 
   return resp.events;

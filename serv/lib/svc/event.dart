@@ -82,6 +82,20 @@ class EventService extends EventServiceBase {
 
     return EventCreateResponse(status: Status(code: 0));
   }
+  
+  @override
+  Future<StatusResponse> deleteEvent(ServiceCall call, EventDeleteRequest request) async {
+    var session = await sessionManager.getDbSessionFromContext(call);
+    var person = session.data['sessionPersonEntry'] as db.SectionPersonEntry;
+    _log.fine('deleteEvent id: ${request.eventId}');
+    try {
+      await eventDao.deleteEvent(eventId: request.eventId);
+      return StatusResponse(status: Status(code: 0));
+    }
+    catch(e) {
+      return StatusResponse(status: Status(code: 1, message: e.toString()));
+    }
+  }
 
   @override
   Future<PersonLookupResponse> personLookup(
@@ -89,4 +103,5 @@ class EventService extends EventServiceBase {
     // TODO: implement personLookup
     throw UnimplementedError();
   }
+
 }

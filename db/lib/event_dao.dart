@@ -26,6 +26,18 @@ class EventDao extends DatabaseAccessor<Database> with _$EventDaoMixin {
     return q.get();
   }
 
+  // todo: do we check for role here?
+  Future<void> deleteEvent({@required eventId}) async {
+    try {
+      var numRows = await (db.delete(db.events)
+        ..where((tbl) => tbl.id.equals(eventId))).go();
+    }
+    catch(e) {
+      throw DatabaseException(
+          'Could not delete event $eventId');
+    }
+  }
+
   // Event createEventTemplate({required SectionPersonEntry personEntry, required sectionId, required String title, required String description}) {
   //   var now = DateTime.now();
   //   var start = now.
