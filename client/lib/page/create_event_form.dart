@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:protos/protos.dart';
 import '../provider.dart';
+import '../svc/event_svc.dart';
 
 // Form to create an event..
 //
@@ -32,7 +33,7 @@ class CreateEventForm extends HookConsumerWidget {
 
     // Create the event - called once the form is valid
     // If the create failed, return the error message, otherwise null
-    Future<String?> _submitCreateEvent(EventServiceClient ec) async {
+    Future<String?> _submitCreateEvent(EventService es) async {
       var event = Event(title: title.text,
         description: description.text,
         eventStartTs: Timestamp.fromDateTime(eventStart.value),
@@ -45,13 +46,8 @@ class CreateEventForm extends HookConsumerWidget {
         minParticipants: 2,
         maxParticipants: 4,
       );
-      var req = EventCreateRequest(event: event);
 
-      var res = await ec.createEvent(req);
-      print('create request result = ${res.status}');
-      if( res.status.code == 0)
-        return null;
-      return res.status.message;
+      var r =  await es.createEvent(event);
     }
 
     return Scaffold(

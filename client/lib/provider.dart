@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:client/svc/event_svc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:protos/protos.dart';
@@ -67,7 +68,7 @@ Future<String> _authenticateServer(User u) async {
 }
 
 final eventServiceProvider =
-    FutureProvider<EventServiceClient>((ref)  async {
+    FutureProvider<EventService>((ref)  async {
       // todo: this should watch registered users...
       // var u = ref.watch(userProvider);
 
@@ -79,7 +80,7 @@ final eventServiceProvider =
           // compression: const GzipCodec(),
           metadata: {'authorization': response.sessionId});
 
-      return EventServiceClient(_channel, options: options);
+      return EventService(EventServiceClient(_channel, options: options));
     });
 
 // final sectionIdProvider = StateProvider<int>((ref) => 1);
@@ -95,16 +96,13 @@ class SelectedSection extends StateNotifier<int> {
   }
 }
 
+
 // TODO: This probably does not qualify as a provider - too specific
 final currentEventsProvider = FutureProvider<List<Event>>((ref) async {
   var sectionId = ref.watch(sectionIdProvider);
   var evp = await ref.watch(eventServiceProvider.future);
-  var req = EventLookupRequest(sectionId: sectionId);
-
-  print('events provder updated...');
-  var resp = await evp.getEvents(req);
-
-  return resp.events;
+  var events = evp.getEvents(sectionId);
+  return events;
   });
 
 final _channel = GrpcWebClientChannel.xhr(Uri.parse('http://localhost:8080'));
