@@ -1,4 +1,4 @@
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:protos/protos.dart';
 
@@ -6,28 +6,59 @@ import '../provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../svc/event_svc.dart';
+
 class EventsPage extends ConsumerWidget {
   EventsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final events = ref.watch(currentEventsProvider);
+    final events = ref.watch(currentEventStream);
+    final esp = ref.watch(eventServiceProvider);
+
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Events'),
-          leading: Icon(Icons.home),
+          title: const Text('Events Listing'),
         ),
+      drawer: Drawer(
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text('Events'),
+            ),
+            ListTile(
+              title: const Text('Create New Event'),
+              onTap: () {
+                Navigator.pop(context); // close drawer
+                context.push('/events/create');
+              },
+            ),
+            ListTile(
+              title: const Text('Item 2'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
         body: events.when(
           data: (el) => ListView.builder(
               padding: const EdgeInsets.all(8),
               itemCount: el.length,
               itemBuilder: (BuildContext context, int index) {
-                return EventSummaryItem(el[index]);
+                return EventSummaryItem(el[index],esp.asData!.value);
               }),
           error: (e, st) => Center(child: Text('Application error: $e')),
           loading: () => const Center(child: CircularProgressIndicator()),
-        ));
+        ),
+      );
   }
 }
 
@@ -35,15 +66,15 @@ final _dateFormatter = DateFormat.yMMMd();
 
 class EventSummaryItem extends ConsumerWidget {
   final Event event;
+  final EventService svc;
 
-  EventSummaryItem(this.event);
+  EventSummaryItem(this.event, this.svc);
 
   @override
   Widget build(BuildContext context,WidgetRef ref) {
     final st = _dateFormatter.format(event.eventStartTs.toDateTime());
     final end = _dateFormatter.format(event.eventEndTs.toDateTime());
 
-    var esp = ref.watch(eventServiceProvider);
 
     return Card(
       child: ListTile(
@@ -55,8 +86,10 @@ class EventSummaryItem extends ConsumerWidget {
             PopupMenuItem<String>(
               value: 'delete',
               child: Text('delete event'),
-              onTap: () {
+              onTap: () async {
+                await svc.deleteEvent(event.eventId);
                 print('Delete event ${event.eventId}');
+                await svc.refreshEventStream();
               },
             ),
             PopupMenuItem<String>(
@@ -66,8 +99,9 @@ class EventSummaryItem extends ConsumerWidget {
             ),
           ],
         ),
-        onTap: () {
+        onTap: () async {
           print('tapped on event id ${event.eventId}');
+          context.push('/events/${event.eventId}');
         },
       ),
     );

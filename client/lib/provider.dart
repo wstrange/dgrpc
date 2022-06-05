@@ -72,6 +72,7 @@ final eventServiceProvider =
       // todo: this should watch registered users...
       // var u = ref.watch(userProvider);
 
+      final section = ref.watch(sectionIdProvider);
       // HACK HACK...
       var ec = AuthRequest(idToken: 'admin');
       var response = await _authService.authenticateLocal(ec);
@@ -80,7 +81,7 @@ final eventServiceProvider =
           // compression: const GzipCodec(),
           metadata: {'authorization': response.sessionId});
 
-      return EventService(EventServiceClient(_channel, options: options));
+      return EventService(EventServiceClient(_channel, options: options), section);
     });
 
 // final sectionIdProvider = StateProvider<int>((ref) => 1);
@@ -96,12 +97,17 @@ class SelectedSection extends StateNotifier<int> {
   }
 }
 
-
-// TODO: This probably does not qualify as a provider - too specific
-final currentEventsProvider = FutureProvider<List<Event>>((ref) async {
-  var sectionId = ref.watch(sectionIdProvider);
+final currentEventStream = StreamProvider.autoDispose((ref) async* {
   var evp = await ref.watch(eventServiceProvider.future);
-  var events = evp.getEvents(sectionId);
+  ref.onDispose(() { print('dispose called on stream provider');});
+  yield* evp.getEventStream();
+});
+
+// a list of the current events for section
+// todo: Make this a stream??
+final currentEventsProvider = FutureProvider<List<Event>>((ref) async {
+  var evp = await ref.watch(eventServiceProvider.future);
+  var events = evp.getEvents();
   return events;
   });
 

@@ -1,4 +1,5 @@
 import 'package:client/page/create_event_form.dart';
+import 'package:client/page/event_details_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,8 +8,12 @@ import 'dart:developer' as developer;
 import 'page/auth_page.dart';
 import 'page/events_page.dart';
 import 'page/home_page.dart';
+import 'page/event_details_page.dart';
 import 'page/profile_page.dart';
 import 'provider.dart';
+
+
+// See https://github.com/lucavenir/go_router_riverpod
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -62,17 +67,24 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         name: 'eventcreate',
-        path: '/eventcreate',
+        path: '/events/create',
         builder: (context, _) => CreateEventForm(),
       ),
       GoRoute(
           name: 'events',
           path: '/events',
           builder: (context, _) => EventsPage()),
+      GoRoute(
+          path: '/events/:eventId',
+          builder: (context, state)   {
+            var id = int.parse(state.params['eventId']!);
+            return EventsDetailsPage(eventId: id);
+          },),
     ],
   );
 });
 
+// Not used right now. See  https://github.com/lucavenir/go_router_riverpod/blob/master/lib/router.dart
 class RouterNotifier extends ChangeNotifier {
   final Ref _ref;
 

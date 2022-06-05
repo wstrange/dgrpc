@@ -19,17 +19,26 @@ class EventService extends EventServiceBase {
     var evp = EventLookupResponse();
     _log.finest('getEvents section: ${request.sectionId}');
 
-    var dbEvents =
-        await eventDao.getEventsBySection(sectionId: request.sectionId);
+    List<db.Event> events = [];
+    // Lookup a specific event
+    if( request.eventId != 0 ) {
+       var e = await eventDao.getEvent(eventId: request.eventId);
+       if( e != null)
+         events.add(e);
+    }
+    else {
+      events =
+      await eventDao.getEventsBySection(sectionId: request.sectionId);
+    }
 
-    if (dbEvents.isEmpty) {
+    if (events.isEmpty) {
       evp.status = Status(
           code: 1, message: 'No events found for section ${request.sectionId}');
       return evp;
     }
 
     // copy events into the response
-    for (var e in dbEvents) {
+    for (var e in events) {
       evp.events.add(dbEvent2Proto(e));
     }
     return evp;

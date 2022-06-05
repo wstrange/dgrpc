@@ -26,6 +26,11 @@ class EventDao extends DatabaseAccessor<Database> with _$EventDaoMixin {
     return q.get();
   }
 
+  Future<Event?> getEvent({required int eventId}) async {
+    var q = db.select(db.events)..where( (e) => e.id.equals(eventId));
+    return q.getSingleOrNull();
+  }
+
   // todo: do we check for role here?
   Future<void> deleteEvent({@required eventId}) async {
     try {

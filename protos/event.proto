@@ -27,8 +27,8 @@ message EventLookupRequest {
     google.protobuf.Timestamp to_ts = 3;
     // The id of the creator. 0 means any creator
     int32 createdByPersonId = 4;
+    int32  eventId = 5; // If eventId is non zero, return only that specific event
 }
-
 
 message EventLookupResponse {
     dgrpc.Status  status = 1;

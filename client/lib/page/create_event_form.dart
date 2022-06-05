@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:protos/protos.dart';
 import '../provider.dart';
 import '../svc/event_svc.dart';
+import 'package:go_router/go_router.dart';
+
 
 // Form to create an event..
 //
@@ -134,6 +136,7 @@ class CreateEventForm extends HookConsumerWidget {
                 }
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(s),));
                 _formKey.currentState!.reset();
+                context.go('/events');
               });
             } : null,
             child: const Text('Submit'),

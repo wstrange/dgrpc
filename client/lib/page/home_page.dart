@@ -13,7 +13,7 @@ class HomePage extends ConsumerWidget {
     final eventService = ref.watch(eventServiceProvider);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Event Manager'),
+        title: const Text('Home: Event Manager'),
       ),
       drawer: Drawer(
         child: ListView(
