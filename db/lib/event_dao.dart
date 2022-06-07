@@ -1,9 +1,10 @@
-import 'package:db/db.dart';
 import 'package:drift/drift.dart';
+import 'event_db.dart';
+import 'person_dao.dart';
 
 part 'event_dao.g.dart';
 
-@DriftAccessor(tables: [Events])
+@DriftAccessor(tables: [Events,EventParticipants])
 class EventDao extends DatabaseAccessor<Database> with _$EventDaoMixin {
   EventDao(Database db) : super(db);
 
@@ -14,7 +15,7 @@ class EventDao extends DatabaseAccessor<Database> with _$EventDaoMixin {
     // Check the event criteria
     if (!sp.canCreateEvent(sectionId: ev.sectionId.value)) {
       throw DatabaseException(
-          'This person is not a leader or admin for the section ${ev.sectionId}');
+          'This person $sp not a leader or admin for the section ${ev.sectionId}');
     }
     // returns the id of the entry
     var r = await db.into(db.events).insert(ev);
@@ -43,11 +44,41 @@ class EventDao extends DatabaseAccessor<Database> with _$EventDaoMixin {
     }
   }
 
-  // Event createEventTemplate({required SectionPersonEntry personEntry, required sectionId, required String title, required String description}) {
-  //   var now = DateTime.now();
-  //   var start = now.
-  //   return Event(createdByPersonId: personEntry.person.id, title: title,
-  //     createdAt: now, sectionId: sectionId,
-  //   )
-  // }
+  Future<List<EventParticipant>> getEventParticipants({@required eventId}) {
+    var q = select(db.eventParticipants)
+      ..where((e) => e.eventId.equals(eventId));
+    return q.get();
+  }
+
+
+  Future<List<EventPersonJoin>> getEventPersons({@required eventId}) async {
+      var q = select(db.persons).join([
+        innerJoin(db.eventParticipants, db.eventParticipants.eventId.equals(eventId) & db.eventParticipants.eventPersonId.equalsExp(db.persons.id))
+        ]);
+
+      q.orderBy([OrderingTerm.asc(db.eventParticipants.createdAt)]);
+      var r = await q.get();
+      return r.map( (row) {
+          var person = row.readTable(db.persons);
+          var participant = row.readTable(db.eventParticipants);
+          return EventPersonJoin(person,participant);
+      }).toList();
+  }
+
+  Future<void> registerPersonForEvent({required int eventId, required personId, required int roleInt}) async {
+    await db.into(db.eventParticipants).insert(
+          EventParticipantsCompanion.insert(eventId: eventId,
+              eventPersonId: personId,
+              eventRole: EventStatus.values[roleInt],
+              createdAt: DateTime.now()));
+  }
+}
+
+
+class EventPersonJoin {
+  Person person;
+  EventParticipant eventParticipant;
+
+  EventPersonJoin(this.person, this.eventParticipant);
+
 }

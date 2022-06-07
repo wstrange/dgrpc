@@ -3,8 +3,9 @@ import 'package:client/svc/event_svc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:protos/protos.dart';
-import 'package:grpc/grpc_web.dart';
 import 'dart:developer' as developer;
+import 'package:grpc/grpc.dart';
+import 'channel_io.dart' if(dart.library.js) "channel_web.dart";
 
 final firebaseAuthProvider =
     Provider<FirebaseAuth>((ref) => FirebaseAuth.instance);
@@ -61,36 +62,34 @@ final sessionChangeProvider = StreamProvider<String>((ref) {
 Future<String> _authenticateServer(User u) async {
   var t = await u.getIdToken(false);
   // user is not null - try to get a session id;
-  final response = await _authService.authenticate(AuthRequest()..idToken = t);
+  final response = await authServiceClient.authenticate(AuthRequest()..idToken = t);
   developer.log(
       'Response from svc = id= ${response.sessionId} ${response.error} ${response.messages}');
   return response.sessionId;
 }
 
-final eventServiceProvider =
-    FutureProvider<EventService>((ref)  async {
-      // todo: this should watch registered users...
-      // var u = ref.watch(userProvider);
+final eventServiceProvider = FutureProvider<EventService>((ref) async {
+  // todo: this should watch registered users...
+  // var u = ref.watch(userProvider);
 
-      final section = ref.watch(sectionIdProvider);
-      // HACK HACK...
-      var ec = AuthRequest(idToken: 'admin');
-      var response = await _authService.authenticateLocal(ec);
-      // print('Got session = ${response.sessionId} personId = ${response.personId}');
-      var options = CallOptions(
-          // compression: const GzipCodec(),
-          metadata: {'authorization': response.sessionId});
+  final section = ref.watch(sectionIdProvider);
+  // HACK HACK...
+  var ec = AuthRequest(idToken: 'admin');
+  var response = await authServiceClient.authenticateLocal(ec);
+  // print('Got session = ${response.sessionId} personId = ${response.personId}');
+  var options = CallOptions(
+      // compression: const GzipCodec(),
+      metadata: {'authorization': response.sessionId});
 
-      return EventService(EventServiceClient(_channel, options: options), section);
-    });
+  return EventService(EventServiceClient(channel, options: options), section);
+});
 
 // final sectionIdProvider = StateProvider<int>((ref) => 1);
-final sectionIdProvider = StateNotifierProvider<SelectedSection,int>((ref) =>
-    SelectedSection(ref)
-);
+final sectionIdProvider =
+    StateNotifierProvider<SelectedSection, int>((ref) => SelectedSection(ref));
 
 class SelectedSection extends StateNotifier<int> {
-  SelectedSection(this.ref): super(1);
+  SelectedSection(this.ref) : super(1);
   final Ref ref;
   void setSectionId(int id) {
     state = id;
@@ -99,7 +98,9 @@ class SelectedSection extends StateNotifier<int> {
 
 final currentEventStream = StreamProvider.autoDispose((ref) async* {
   var evp = await ref.watch(eventServiceProvider.future);
-  ref.onDispose(() { print('dispose called on stream provider');});
+  ref.onDispose(() {
+    print('dispose called on stream provider');
+  });
   yield* evp.getEventStream();
 });
 
@@ -109,8 +110,19 @@ final currentEventsProvider = FutureProvider<List<Event>>((ref) async {
   var evp = await ref.watch(eventServiceProvider.future);
   var events = evp.getEvents();
   return events;
-  });
+});
 
-final _channel = GrpcWebClientChannel.xhr(Uri.parse('http://localhost:8080'));
-final _authService = AuthServiceClient(_channel);
-final _eventService = EventServiceClient(_channel);
+// final _channelx = GrpcWebClientChannel.xhr(Uri.parse('http://localhost:8080'));
+// final channel = ClientChannel(
+//   // 'localhost',
+//   'warrens-air',
+//   port: 9090,
+//   options: ChannelOptions(
+//     credentials: ChannelCredentials.insecure(),
+//     codecRegistry: CodecRegistry(codecs: const [GzipCodec(), IdentityCodec()]),
+//   ),
+// );
+//
+
+final authServiceClient = AuthServiceClient(channel);
+final eventServiceClient = EventServiceClient(channel);

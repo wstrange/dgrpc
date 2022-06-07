@@ -7,15 +7,18 @@ import 'package:protos/protos.dart';
 import '../provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../util.dart';
 
 import '../svc/event_svc.dart';
 
-var eventProvider = FutureProvider.autoDispose.family<Event,int>((ref,eventId){
+var eventProvider = FutureProvider.autoDispose
+    .family<EventDetailsResponse, int>((ref, eventId) async {
+  // ref.onDispose(() { print('dispose provider of eventId $eventId');});
   var evp = ref.watch(eventServiceProvider);
-  return evp.value!.getEvent(eventId);
+  return evp.value!.getFullEventDetails(eventId);
 });
 
-class EventsDetailsPage extends HookConsumerWidget {
+class EventsDetailsPage extends ConsumerWidget {
   final int eventId;
 
   EventsDetailsPage({Key? key, required this.eventId}) : super(key: key);
@@ -25,17 +28,68 @@ class EventsDetailsPage extends HookConsumerWidget {
     var fe = ref.watch(eventProvider(eventId));
 
     return Scaffold(
-      appBar: AppBar(title: Text('Event $eventId')),
-      body: fe.when(
-          data: (ev) {
-            return Text('Event details for ${ev.title}'
-            );
-          },
-          error: (e,s) => Text(e.toString()),
-          loading: () => CircularProgressIndicator())
-    );
+        appBar: AppBar(title: Text('Event $eventId')),
+        body: fe.when(
+            data: (ev) => _EventView(ev),
+            error: (e, s) => Text(e.toString()),
+            loading: () => CircularProgressIndicator()));
   }
 
   String _trimString(String s, int len) =>
       s.length > len ? s.substring(0, len) : s;
+}
+
+class _EventView extends ConsumerWidget {
+  EventDetailsResponse eventDetails;
+  Event event;
+  _EventView(this.eventDetails) : event = eventDetails.event;
+
+  Widget build(BuildContext context, WidgetRef ref) {
+    var svc = ref.watch(eventServiceProvider).value!;
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(
+          '${event.title}',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(event.description),
+        SizedBox(
+          height: 10,
+        ),
+        Text("Starts on ${event.eventStartTs.yMMMd()}"),
+        Text("Ends on ${event.eventEndTs.yMMMd()}"),
+        if (event.registerStartTs.isAfterNow())
+          Text("Registration Starts ${event.registerStartTs.yMMMd()}"),
+        SizedBox(
+          height: 10,
+        ),
+        Text('Event Users'),
+        SizedBox(height: 10,),
+        Wrap(spacing: 8.0, runSpacing: 4.0,
+            children: eventDetails.eventPersonInfos.map( (p) {
+          return Chip(label: Text(p.personInfo.email),);
+        }).toList()),
+        SizedBox(height: 10,),
+        Row(
+          children: [
+            ElevatedButton(
+                onPressed: () async {
+                  await svc.addPerson2Event(
+                      eventId: event.eventId,
+                      // todo: get person id
+                      personId: 1,
+                      role: EventPersonInfo_EventRole.ADMIN);
+                  print('person added to event');
+                },
+                child: Text('Register'))
+          ],
+        ),
+      ]),
+    );
+  }
 }

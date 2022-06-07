@@ -1,11 +1,10 @@
-import 'package:db/person_dao.dart';
-import '../lib/event_db.dart';
+import 'package:db/db.dart';
 import 'dart:math';
 // Create some sample data...
 
-final _numSections = 5;
-final _numUsers = 10;
-final _numEvents = 100;
+final _numSections = 3;
+final _numUsers = 6;
+final _numEvents = 10;
 
 final rand = Random();
 
@@ -22,7 +21,7 @@ class SeedData {
           name: "Section $i",
           description: "This is the description for section $i"));
       await createPersons(superAdminId, secId);
-      await createEvents(superAdminId,secId);
+      await createEvents(superAdminId, secId);
     }
   }
 
@@ -31,10 +30,11 @@ class SeedData {
     // Make the super admin a section admin. Do we need this?
     // we could also just set a flag on the users account to make them
     // a super admin...
-    await db.into(db.sectionPersons).insert(SectionPersonsCompanion.insert(
+    var _x = await db.into(db.sectionPersons).insert(SectionPersonsCompanion.insert(
         personId: superAdminId,
         sectionId: sectionId,
         sectionRole: SectionRole.admin));
+
 
     var uid = await db.into(db.persons).insert(PersonsCompanion.insert(
         email: 'admin_$sectionId@test.com', ssid: genId()));
@@ -42,6 +42,7 @@ class SeedData {
     await db.into(db.sectionPersons).insert(SectionPersonsCompanion.insert(
         personId: uid, sectionId: sectionId, sectionRole: SectionRole.admin));
 
+    // Create a section leader
     uid = await db.into(db.persons).insert(PersonsCompanion.insert(
         email: 'leader_$sectionId@test.com', ssid: genId()));
     await db.into(db.sectionPersons).insert(SectionPersonsCompanion.insert(
@@ -57,32 +58,36 @@ class SeedData {
 
   Future<void> createEvents(int superAdminId, int sectionId) async {
     var p = Person(id: superAdminId, email: 'foo', ssid: 'admin');
-    var sections = <SectionPerson>[];
+    var sections = [SectionPerson(personId: superAdminId, sectionId: sectionId,
+        sectionRole: SectionRole.admin)];
     var now = DateTime.now();
     var sp = SectionPersonEntry(p, sections);
-    for(var i =0; i < _numEvents; ++i) {
-      // var e = Event(
-      //     description: 'test', title: 'test',
-      //     sectionId: sectionId, createdByPersonId: superAdminId,
-      //     createdAt: now, endTime:  now, registrationEndTime:  now,
-      // registrationStartTime:  now, startTime: now, id: Value.absent());
+    for (var i = 0; i < _numEvents; ++i) {
 
       var ec = EventsCompanion.insert(
-          maxParticipants: 4,
-          minParticipants: 1,
-          description: 'test $sectionId at $now', title: 'test $sectionId',
-          sectionId: sectionId, createdByPersonId: superAdminId,
-          createdAt: now, endTime:  now, registrationEndTime:  now,
-          registrationStartTime:  now, startTime: now,);
+        maxParticipants: 4,
+        minParticipants: 1,
+        description: 'description for test event $sectionId at $now',
+        title: 'test $sectionId',
+        sectionId: sectionId,
+        createdByPersonId: superAdminId,
+        createdAt: now,
+        endTime: now,
+        registrationEndTime: now,
+        registrationStartTime: now,
+        startTime: now,
+      );
 
       await db.eventDao.addEvent(sp, ec);
+
+      // todo: register some users..
     }
   }
+
   Future<void> seedAll() async {
     // create the super admin...
     var superAdminId = await db.into(db.persons).insert(
         PersonsCompanion.insert(email: 'admin@test.com', ssid: 'admin'));
     await createSections(superAdminId);
-
   }
 }

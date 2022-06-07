@@ -21,7 +21,7 @@ void main() {
     expect(e, isNull);
 
     // Admin user 0 is the admin of section 0
-    e = await pdao.getPersonEntry(email: 'admin_0@test.com');
+    e = await pdao.getPersonEntry(email: 'admin_1@test.com');
     expect(e, isNotNull);
     print('$e');
     expect(e!.sections.length, equals(1));
@@ -31,6 +31,15 @@ void main() {
     expect(section, isNotNull);
     expect(section!.id, equals(1));
     expect(e.isSectionAdmin(section), isTrue);
+  });
+
+  test('eventperson join', () async {
+    var dao = db.eventDao;
+
+    var res = await dao.getEventPersons(eventId: 1);
+
+    print('res = $res');
+
   });
 
   // test('Create event', ()async {

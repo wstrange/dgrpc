@@ -56,8 +56,10 @@ message StatusResponse {
 message PersonInfo {
     string email = 1;
     int32 id = 2;
-
+    // The sections the person belongs to
+    repeated int32 sectionIds = 3;
 }
+
 message PersonLookupRequest {
     // array of persons to lookup
     repeated int32 personIds = 1;
@@ -68,9 +70,44 @@ message PersonLookupResponse {
     repeated PersonInfo personInfos = 2;
 }
 
+// Info about a person associated with an event
+// their email, role in the event, etc.
+message EventPersonInfo {
+    PersonInfo person_info = 1;
+    enum EventRole {
+        ADMIN = 0;
+        COORDINATOR = 1;
+        WAITLISTED = 2;
+        REGISTERED = 3;
+    }
+    EventRole event_role = 2 ;
+}
+
+// All the info we need to eval an event
+message EventDetails {
+    Event event = 1;
+    repeated EventPersonInfo persons = 2;
+}
+message EventDetailsRequest {
+    int32  eventId = 1;
+}
+message  EventDetailsResponse {
+    dgrpc.Status status = 1;
+    repeated EventPersonInfo event_person_infos = 2;
+    Event event = 3;
+}
+
+message EventRegisterRequest {
+    int32 eventId = 1;
+    int32 personId = 2;
+    EventPersonInfo.EventRole role = 3;
+}
+
 service EventService {
     rpc GetEvents(EventLookupRequest) returns (EventLookupResponse);
     rpc CreateEvent(EventCreateRequest) returns (EventCreateResponse);
     rpc DeleteEvent(EventDeleteRequest) returns (StatusResponse);
     rpc PersonLookup(PersonLookupRequest) returns (PersonLookupResponse);
+    rpc GetEventDetails(EventDetailsRequest) returns (EventDetailsResponse);
+    rpc RegisterForEvent(EventRegisterRequest) returns (StatusResponse);
 }

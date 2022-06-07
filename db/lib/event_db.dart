@@ -56,7 +56,6 @@ class Events extends Table {
 
 }
 
-
 class Persons extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get email => text().withLength(min: 3, max: 64).unique()();
@@ -64,36 +63,47 @@ class Persons extends Table {
   TextColumn get ssid => text().withLength(min:2, max:32).unique()();
 }
 
-@DataClassName('EventPersonEntry')
-class EventPersonsEntries extends Table {
+// Note these are in the same order as the protobuf definition to make
+// conversion easy.
+enum EventStatus {
+  owner,
+  coordinator,
+  waitlisted,
+  registered,
+}
+
+// A Person associated with an event.
+// @DataClassName('EventPersonEntry')
+class EventParticipants extends Table {
   // IntColumn get event => integer().customConstraint('NOT NULL REFERENCES events(id)')();
-  IntColumn get event => integer().references(Events, #id)();
-  IntColumn get eventPerson => integer().references(Persons, #id)();
-  TextColumn get eventRole => text().withLength(min: 3, max: 10)();
-
+  IntColumn get eventId => integer().references(Events, #id)();
+  IntColumn get eventPersonId => integer().references(Persons, #id)();
+  IntColumn get eventRole => intEnum<EventStatus>()();
+  // When the entry was created (i.e. when the user signed up)
+  DateTimeColumn get createdAt => dateTime()();
   @override
-  Set<Column> get primaryKey => {event, eventPerson};
+  Set<Column> get primaryKey => {eventId, eventPersonId};
 }
-
-class EventPersons {
-  final Persons eventPerson;
-  final Events event;
-  EventPersons(this.eventPerson, this.event);
-}
+//
+// class EventPersons {
+//   final Persons eventPerson;
+//   final Events event;
+//   EventPersons(this.eventPerson, this.event);
+// }
 
 // This will make db generate a class called "Category" to represent a row in
 // this table. By default, "Categorie" would have been used because it only
 //strips away the trailing "s" in the table name.
-@DataClassName('Category')
-class Categories extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get description => text()();
-}
+// @DataClassName('Category')
+// class Categories extends Table {
+//   IntColumn get id => integer().autoIncrement()();
+//   TextColumn get description => text()();
+// }
 
 // this annotation tells db to prepare a database class that uses both of the
 // tables we just defined. We'll see how to use that database class in a moment.
 @DriftDatabase(
-    tables: [Events, EventPersonsEntries, SectionPersons,Persons,Sections],
+    tables: [Events, EventParticipants, SectionPersons,Persons,Sections],
     daos: [PersonDao, SectionDao,EventDao],
     include: {'event.drift'})
 class Database extends _$Database {
@@ -103,6 +113,8 @@ class Database extends _$Database {
 
   @override
   int get schemaVersion => 1;
+
+
 
 }
 
@@ -133,3 +145,13 @@ LazyDatabase _openConnection() {
 //       username: 'postgres', password: 'postgres');
 //   return DatabaseConnection.fromExecutor(PgDatabase(pgConnection));
 // }
+
+
+
+class DatabaseException implements Exception {
+  String _message;
+
+  String get message => _message;
+
+  DatabaseException(this._message);
+}

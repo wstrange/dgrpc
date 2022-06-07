@@ -8,7 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:developer' as developer;
 
 import 'package:protos/protos.dart';
-import 'package:grpc/grpc_web.dart';
+import 'package:grpc/grpc.dart';
 
 import 'auth_page.dart';
 
@@ -284,15 +284,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     var t = await user.getIdToken(false);
     // print('validate token $t');
 
-    final channel =
-        GrpcWebClientChannel.xhr(Uri.parse('http://localhost:8080'));
-    final service = AuthServiceClient(channel);
+    // final channel =
+    //     GrpcWebClientChannel.xhr(Uri.parse('http://localhost:8080'));
     // add json to metadata
     //var options = CallOptions(metadata: {'authorization': 'Bearer $t'});
 
     //var options = CallOptions();
 
-    final response = await service.authenticate(AuthRequest()..idToken = t);
+    final response = await authServiceClient.authenticate(AuthRequest()..idToken = t);
     print(
         'Response from svc = id= ${response.sessionId} ${response.error} ${response.messages}');
 

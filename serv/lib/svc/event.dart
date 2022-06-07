@@ -91,7 +91,8 @@ class EventService extends EventServiceBase {
 
     return EventCreateResponse(status: Status(code: 0));
   }
-  
+
+  // TODO: Delete event should also delete registrations
   @override
   Future<StatusResponse> deleteEvent(ServiceCall call, EventDeleteRequest request) async {
     var session = await sessionManager.getDbSessionFromContext(call);
@@ -111,6 +112,46 @@ class EventService extends EventServiceBase {
       ServiceCall call, PersonLookupRequest request) {
     // TODO: implement personLookup
     throw UnimplementedError();
+  }
+
+  @override
+  Future<EventDetailsResponse> getEventDetails(ServiceCall call, EventDetailsRequest request) async {
+   // lookup the event, an get all the person info associated with the event,
+
+    // get the event
+    var event = await eventDao.getEvent(eventId: request.eventId);
+
+    if( event == null)  {
+      return EventDetailsResponse(status: Status(code: 1, message: 'Event not found'));
+    }
+
+    // get the persons associated with the event
+    var evs = await eventDao.getEventPersons(eventId: request.eventId);
+
+    var resp = EventDetailsResponse();
+    resp.event = dbEvent2Proto(event);
+
+    for( var p in evs ) {
+      resp.eventPersonInfos.add(_dbEventPerson2EventPersonInfo(p));
+    }
+    return resp;
+  }
+
+  EventPersonInfo _dbEventPerson2EventPersonInfo(db.EventPersonJoin p) => EventPersonInfo(
+      eventRole: EventPersonInfo_EventRole.valueOf( p.eventParticipant.eventRole.index),
+      personInfo: PersonInfo(id:p.person.id, email: p.person.email )
+    );
+
+  @override
+  Future<StatusResponse> registerForEvent(ServiceCall call, EventRegisterRequest r) async {
+    // todo: What permission checks do we need here?
+    try {
+      await eventDao.registerPersonForEvent(eventId: r.eventId, personId: r.personId, roleInt: r.role.value);
+      return StatusResponse();
+    }
+    catch(e) {
+      return StatusResponse(status: Status(code: 1, message: e.toString()));
+    }
   }
 
 }
