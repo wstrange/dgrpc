@@ -33,6 +33,11 @@ class HomePage extends ConsumerWidget {
               },
             ),
             ListTile(
+              title: const Text('User Admin'),
+              onTap: () => context.go('/admin/user'
+              ),
+            ),
+            ListTile(
               title: const Text('Item 2'),
               onTap: () {
                 Navigator.pop(context);
@@ -42,7 +47,9 @@ class HomePage extends ConsumerWidget {
         ),
       ),
       body: eventService.when(
-          data: (evp) => EventView(eventService: evp,),
+          data: (evp) => EventView(
+                eventService: evp,
+              ),
           loading: () => Center(child: CircularProgressIndicator()),
           error: (err, stackTrace) => Column(
                 children: [

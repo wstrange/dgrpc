@@ -69,12 +69,27 @@ class _EventView extends ConsumerWidget {
           height: 10,
         ),
         Text('Event Users'),
-        SizedBox(height: 10,),
-        Wrap(spacing: 8.0, runSpacing: 4.0,
-            children: eventDetails.eventPersonInfos.map( (p) {
-          return Chip(label: Text(p.personInfo.email),);
-        }).toList()),
-        SizedBox(height: 10,),
+        SizedBox(
+          height: 10,
+        ),
+        Wrap(
+            spacing: 8.0,
+            runSpacing: 4.0,
+            children: eventDetails.eventPersonInfos.map((p) {
+              return InputChip(
+                label: Text(
+                  p.personInfo.email,
+                ),
+                avatar: CircleAvatar(
+                  backgroundColor: Colors.brown.shade800,
+                  child: const Text('A'),
+                ),
+
+              );
+            }).toList()),
+        SizedBox(
+          height: 10,
+        ),
         Row(
           children: [
             ElevatedButton(

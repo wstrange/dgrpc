@@ -1,16 +1,16 @@
 # client
 
-Flutter web test
+Notes
 
-## Getting Started
+grpc auth state / cookies could also be injected with riverpod?
+would that make eventservice stateless?
 
-This project is a starting point for a Flutter application.
+eventService provider - watches for event client stub change
+channel stub watches for user auth change
 
-A few resources to get you started if this is your first Flutter project:
+auth service can use the same watch?
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+todo: Need to insert warren.strange as super admin....
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+

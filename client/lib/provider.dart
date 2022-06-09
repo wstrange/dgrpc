@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:protos/protos.dart';
 import 'dart:developer' as developer;
 import 'package:grpc/grpc.dart';
-import 'channel_io.dart' if(dart.library.js) "channel_web.dart";
+import 'channel_io.dart' if (dart.library.js) "channel_web.dart";
 
 final firebaseAuthProvider =
     Provider<FirebaseAuth>((ref) => FirebaseAuth.instance);
@@ -62,13 +62,42 @@ final sessionChangeProvider = StreamProvider<String>((ref) {
 Future<String> _authenticateServer(User u) async {
   var t = await u.getIdToken(false);
   // user is not null - try to get a session id;
-  final response = await authServiceClient.authenticate(AuthRequest()..idToken = t);
+  final response =
+      await authServiceClient.authenticate(AuthRequest()..idToken = t);
   developer.log(
       'Response from svc = id= ${response.sessionId} ${response.error} ${response.messages}');
   return response.sessionId;
 }
 
-final eventServiceProvider = FutureProvider<EventService>((ref) async {
+
+// todo: do we need a session cookie service???
+// get the session cookie, or 'anonymous' if not present?
+
+final eventServiceProvider = StreamProvider<EventService>((ref) {
+  final _eventScvStream = StreamController<EventService>();
+  ref.onDispose(() => 'dispose called');
+  var s = ref.watch(authStateChangesProvider);
+  var section = ref.watch(sectionIdProvider);
+  s.when(
+    data: (user) async {
+      var sessionCookie = 'anonymous';
+      if( user != null ) {
+        sessionCookie = await _authenticateServer(user);
+      }
+      // todo - make an auth call to get the session cookie
+      var options = CallOptions(metadata: {'authorization': sessionCookie});
+      _eventScvStream.add(
+          EventService(EventServiceClient(channel, options: options), section));
+    },
+    loading: () => AsyncValue.loading(),
+    error: (e, s) => throw Exception(e),
+  );
+  return _eventScvStream.stream;
+});
+
+// should either return an authenticated auth service provider,
+// or one where the channel is anonymous
+final eventServiceProvider2 = FutureProvider<EventService>((ref) async {
   // todo: this should watch registered users...
   // var u = ref.watch(userProvider);
 

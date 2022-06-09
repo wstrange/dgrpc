@@ -73,6 +73,8 @@ enum EventStatus {
 }
 
 // A Person associated with an event.
+// Note a person may have up to 3 associations with the same event
+// They could be an admin, a leader, and a participant
 // @DataClassName('EventPersonEntry')
 class EventParticipants extends Table {
   // IntColumn get event => integer().customConstraint('NOT NULL REFERENCES events(id)')();
@@ -82,7 +84,7 @@ class EventParticipants extends Table {
   // When the entry was created (i.e. when the user signed up)
   DateTimeColumn get createdAt => dateTime()();
   @override
-  Set<Column> get primaryKey => {eventId, eventPersonId};
+  Set<Column> get primaryKey => {eventId, eventPersonId,eventRole};
 }
 //
 // class EventPersons {

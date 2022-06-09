@@ -10,6 +10,7 @@ import 'page/events_page.dart';
 import 'page/home_page.dart';
 import 'page/event_details_page.dart';
 import 'page/profile_page.dart';
+import 'page/user_admin.dart';
 import 'provider.dart';
 
 
@@ -80,6 +81,12 @@ final routerProvider = Provider<GoRouter>((ref) {
             var id = int.parse(state.params['eventId']!);
             return EventsDetailsPage(eventId: id);
           },),
+      GoRoute(
+        path: '/admin/user',
+        builder: (context, state)   {
+          // var id = int.parse(state.params['userId']!);
+          return UserAdminPage();
+        },),
     ],
   );
 });
