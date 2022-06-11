@@ -65,8 +65,8 @@ class EventDao extends DatabaseAccessor<Database> with _$EventDaoMixin {
       }).toList();
   }
 
-  Future<void> registerPersonForEvent({required int eventId, required personId, required int roleInt}) async {
-    await db.into(db.eventParticipants).insert(
+  Future<EventParticipant> registerPersonForEvent({required int eventId, required personId, required int roleInt}) async {
+    return await db.into(db.eventParticipants).insertReturning(
           EventParticipantsCompanion.insert(eventId: eventId,
               eventPersonId: personId,
               eventRole: EventStatus.values[roleInt],

@@ -94,12 +94,11 @@ class _EventView extends ConsumerWidget {
           children: [
             ElevatedButton(
                 onPressed: () async {
-                  await svc.addPerson2Event(
+                  var result = await svc.addPerson2Event(
                       eventId: event.eventId,
-                      // todo: get person id
-                      personId: 1,
+                      personId: svc.personId,
                       role: EventPersonInfo_EventRole.ADMIN);
-                  print('person added to event');
+                  print('add person  ${svc.personId} to event ${event.eventId} result=$result');
                 },
                 child: Text('Register'))
           ],

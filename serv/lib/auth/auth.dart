@@ -36,7 +36,8 @@ class AuthService extends AuthServiceBase {
         response.sessionId = s.id;
         // todo: Lookup the users person id...
         var pe = await _getPersonEntry(s.uid);
-
+        pe ??= await _registerNewUser(tokenInfo);
+        response.personId = pe.person.id;
       }
     } catch (e) {
       print('validation error $e');
@@ -57,11 +58,11 @@ class AuthService extends AuthServiceBase {
       response.sessionId = s.id;
       var pe = await _getPersonEntry(s.uid);
       if( pe == null ) {
-        _log.info('User does not exist in the db');
         response.error = AuthResponse_AuthErrors.NO_USER_IN_DB;
         response.messages.add('User does not exist in the database');
         return response;
       }
+
       _log.finest('Person entry ${pe}');
       response.personId = pe.person.id;
     } else {
@@ -73,8 +74,32 @@ class AuthService extends AuthServiceBase {
 
   Future<SectionPersonEntry?> _getPersonEntry(String ssid) async {
     var pe = await _db.personDao.getPersonEntry(ssid: ssid);
+    if (pe == null) {
+      _log.fine('No user found for ssid $ssid.');
+    }
     return pe;
   }
+
+  Future<SectionPersonEntry> _registerNewUser(TokenInfo t) async {
+    var email = t.claims['email'];
+    var uid = t.claims['sub'];
+
+    var person = await _db.into(_db.persons).insertReturning(PersonsCompanion.insert(
+      email: email,
+      ssid: uid,
+    ));
+    _log.fine('Creating person id=$uid, $email, $uid');
+
+    var sectionPerson = await _db.into(_db.sectionPersons).insertReturning(SectionPersonsCompanion.insert(
+      personId: person.id,
+      sectionId: 0,
+      sectionRole: SectionRole.guest,
+    ));
+
+    return SectionPersonEntry(person, [sectionPerson]);
+  }
+
+
 }
 
 FutureOr<GrpcError?> authInterceptor(

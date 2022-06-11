@@ -11,8 +11,12 @@ class EventService {
   EventServiceClient stub;
   final int _sectionId;
   final _eventStream = StreamController<List<Event>>();
+  final AuthResponse authResponse;
 
-  EventService(this.stub, this._sectionId) {
+  get currentSection => _sectionId;
+  get personId => authResponse.personId;
+
+  EventService(this.stub, this._sectionId,this.authResponse) {
     refreshEventStream();
   }
 
@@ -62,12 +66,11 @@ class EventService {
     return res;
   }
 
-
-  Future<void> addPerson2Event(
+  Future<StatusResponse> addPerson2Event(
       {required int eventId,
       required personId,
       required EventPersonInfo_EventRole role}) async {
-    await stub.registerForEvent(EventRegisterRequest(
+    return await stub.registerForEvent(EventRegisterRequest(
       eventId: eventId,
       personId: personId,
       role: role,

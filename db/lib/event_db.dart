@@ -16,6 +16,7 @@ part 'event_db.g.dart';
 var dbLog = Logger('db');
 
 enum SectionRole {
+  guest,  // not registered.
   member, // a member. Can sign up for events
   leader, // a leader. Can coordinate and create events for a section
   admin, // A section admin. Can promote persons to leaders, etc.
@@ -61,6 +62,9 @@ class Persons extends Table {
   TextColumn get email => text().withLength(min: 3, max: 64).unique()();
   // Unique single sign on id - assigned by the auth provider. EG: Firebase
   TextColumn get ssid => text().withLength(min:2, max:32).unique()();
+  // The default or primary section the person belongs to
+  IntColumn get primarySection => integer().withDefault(const Constant(0))();
+  BoolColumn get superAdmin => boolean().withDefault(const Constant(false))();
 }
 
 // Note these are in the same order as the protobuf definition to make

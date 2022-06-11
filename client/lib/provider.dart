@@ -30,7 +30,8 @@ final sessionChangeProvider = StreamProvider<String>((ref) {
   ref.watch(firebaseAuthProvider).authStateChanges().listen((u) async {
     var s = "anonymous";
     if (u != null) {
-      s = await _authenticateServer(u);
+      var response = await _authenticateServer(u);
+      s = response.sessionId;
     }
     controller.add(s);
   });
@@ -59,14 +60,15 @@ final sessionChangeProvider = StreamProvider<String>((ref) {
 // // print('validate token $t');
 // AuthServiceClient _service;
 
-Future<String> _authenticateServer(User u) async {
+Future<AuthResponse> _authenticateServer(User u) async {
   var t = await u.getIdToken(false);
   // user is not null - try to get a session id;
   final response =
       await authServiceClient.authenticate(AuthRequest()..idToken = t);
   developer.log(
       'Response from svc = id= ${response.sessionId} ${response.error} ${response.messages}');
-  return response.sessionId;
+
+  return response;
 }
 
 
@@ -80,37 +82,22 @@ final eventServiceProvider = StreamProvider<EventService>((ref) {
   var section = ref.watch(sectionIdProvider);
   s.when(
     data: (user) async {
-      var sessionCookie = 'anonymous';
-      if( user != null ) {
-        sessionCookie = await _authenticateServer(user);
-      }
+      if ( user == null )
+        throw Exception('User object is null. Fixme');
+      var r =  await _authenticateServer(user);
+      var sessionCookie = r.sessionId;
+      developer.log('Auth response = $r');
+
       // todo - make an auth call to get the session cookie
       var options = CallOptions(metadata: {'authorization': sessionCookie});
       _eventScvStream.add(
-          EventService(EventServiceClient(channel, options: options), section));
+          EventService(EventServiceClient(channel, options: options,
+          ), section, r));
     },
     loading: () => AsyncValue.loading(),
     error: (e, s) => throw Exception(e),
   );
   return _eventScvStream.stream;
-});
-
-// should either return an authenticated auth service provider,
-// or one where the channel is anonymous
-final eventServiceProvider2 = FutureProvider<EventService>((ref) async {
-  // todo: this should watch registered users...
-  // var u = ref.watch(userProvider);
-
-  final section = ref.watch(sectionIdProvider);
-  // HACK HACK...
-  var ec = AuthRequest(idToken: 'admin');
-  var response = await authServiceClient.authenticateLocal(ec);
-  // print('Got session = ${response.sessionId} personId = ${response.personId}');
-  var options = CallOptions(
-      // compression: const GzipCodec(),
-      metadata: {'authorization': response.sessionId});
-
-  return EventService(EventServiceClient(channel, options: options), section);
 });
 
 // final sectionIdProvider = StateProvider<int>((ref) => 1);

@@ -146,7 +146,8 @@ class EventService extends EventServiceBase {
   Future<StatusResponse> registerForEvent(ServiceCall call, EventRegisterRequest r) async {
     // todo: What permission checks do we need here?
     try {
-      await eventDao.registerPersonForEvent(eventId: r.eventId, personId: r.personId, roleInt: r.role.value);
+      var p = await eventDao.registerPersonForEvent(eventId: r.eventId, personId: r.personId, roleInt: r.role.value);
+      _log.fine('Created registration $p');
       return StatusResponse();
     }
     catch(e) {

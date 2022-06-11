@@ -57,7 +57,8 @@ class SeedData {
   }
 
   Future<void> createEvents(int superAdminId, int sectionId) async {
-    var p = Person(id: superAdminId, email: 'foo', ssid: 'admin');
+    var p = Person(id: superAdminId, email: 'foo', ssid: 'admin', superAdmin: false,
+    primarySection: 0);
     var sections = [SectionPerson(personId: superAdminId, sectionId: sectionId,
         sectionRole: SectionRole.admin)];
     var now = DateTime.now();
