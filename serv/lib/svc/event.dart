@@ -9,8 +9,11 @@ var _log = Logger('EventService');
 // Manage event requests
 class EventService extends EventServiceBase {
   final db.EventDao eventDao;
+  final db.PersonDao personDao;
 
-  EventService(db.Database db) : eventDao = db.eventDao;
+  EventService(db.Database db)
+      : eventDao = db.eventDao,
+        personDao = db.personDao;
 
   // Lookup Events
   @override
@@ -21,14 +24,11 @@ class EventService extends EventServiceBase {
 
     List<db.Event> events = [];
     // Lookup a specific event
-    if( request.eventId != 0 ) {
-       var e = await eventDao.getEvent(eventId: request.eventId);
-       if( e != null)
-         events.add(e);
-    }
-    else {
-      events =
-      await eventDao.getEventsBySection(sectionId: request.sectionId);
+    if (request.eventId != 0) {
+      var e = await eventDao.getEvent(eventId: request.eventId);
+      if (e != null) events.add(e);
+    } else {
+      events = await eventDao.getEventsBySection(sectionId: request.sectionId);
     }
 
     if (events.isEmpty) {
@@ -39,24 +39,10 @@ class EventService extends EventServiceBase {
 
     // copy events into the response
     for (var e in events) {
-      evp.events.add(dbEvent2Proto(e));
+      evp.events.add(e.toProtoEvent());
     }
     return evp;
   }
-
-  // Create a protobuf event from an event created in the database
-  Event dbEvent2Proto(db.Event e) => Event(
-        eventId: e.id,
-        title: e.title,
-        description: e.description,
-        eventStartTs: Timestamp.fromDateTime(e.startTime),
-        eventEndTs: Timestamp.fromDateTime(e.endTime),
-        registerStartTs: Timestamp.fromDateTime(e.registrationStartTime),
-        registerEndTs: Timestamp.fromDateTime(e.registrationEndTime),
-        createdById: e.createdByPersonId,
-        maxParticipants: e.maxParticipants,
-        minParticipants: e.minParticipants,
-      );
 
   db.EventsCompanion protoEvent2Db(Event e, int personId) =>
       db.EventsCompanion.insert(
@@ -84,6 +70,7 @@ class EventService extends EventServiceBase {
 
     try {
       var id = await eventDao.addEvent(person, dbEvent);
+      _log.fine('Event $id created');
     } catch (e) {
       return EventCreateResponse(
           status: Status(code: 1, message: e.toString()));
@@ -94,65 +81,101 @@ class EventService extends EventServiceBase {
 
   // TODO: Delete event should also delete registrations
   @override
-  Future<StatusResponse> deleteEvent(ServiceCall call, EventDeleteRequest request) async {
+  Future<StatusResponse> deleteEvent(
+      ServiceCall call, EventDeleteRequest request) async {
     var session = await sessionManager.getDbSessionFromContext(call);
     var person = session.data['sessionPersonEntry'] as db.SectionPersonEntry;
+    // todo: check if person is allowed to delete event...
     _log.fine('deleteEvent id: ${request.eventId}');
     try {
       await eventDao.deleteEvent(eventId: request.eventId);
       return StatusResponse(status: Status(code: 0));
-    }
-    catch(e) {
+    } catch (e) {
       return StatusResponse(status: Status(code: 1, message: e.toString()));
     }
   }
 
   @override
-  Future<PersonLookupResponse> personLookup(
-      ServiceCall call, PersonLookupRequest request) {
-    // TODO: implement personLookup
-    throw UnimplementedError();
+  Future<PersonSearchResponse> personSearch(
+      ServiceCall call, PersonSearchRequest request) async {
+    // for now just return all users.
+    // todo: implement filtering
+
+    try {
+      var p = await personDao.getPersons();
+      return PersonSearchResponse(personInfos: p.map((e) => e.toPersonInfo()));
+    } catch (e) {
+      return PersonSearchResponse(
+          status: Status(code: 1, message: e.toString()));
+    }
   }
 
   @override
-  Future<EventDetailsResponse> getEventDetails(ServiceCall call, EventDetailsRequest request) async {
-   // lookup the event, an get all the person info associated with the event,
+  Future<EventDetailsResponse> getEventDetails(
+      ServiceCall call, EventDetailsRequest request) async {
+    // lookup the event, an get all the person info associated with the event,
 
     // get the event
     var event = await eventDao.getEvent(eventId: request.eventId);
 
-    if( event == null)  {
-      return EventDetailsResponse(status: Status(code: 1, message: 'Event not found'));
+    if (event == null) {
+      return EventDetailsResponse(
+          status: Status(code: 1, message: 'Event not found'));
     }
 
     // get the persons associated with the event
     var evs = await eventDao.getEventPersons(eventId: request.eventId);
 
     var resp = EventDetailsResponse();
-    resp.event = dbEvent2Proto(event);
+    resp.event = event.toProtoEvent();
 
-    for( var p in evs ) {
+    for (var p in evs) {
       resp.eventPersonInfos.add(_dbEventPerson2EventPersonInfo(p));
     }
     return resp;
   }
 
-  EventPersonInfo _dbEventPerson2EventPersonInfo(db.EventPersonJoin p) => EventPersonInfo(
-      eventRole: EventPersonInfo_EventRole.valueOf( p.eventParticipant.eventRole.index),
-      personInfo: PersonInfo(id:p.person.id, email: p.person.email )
-    );
+  EventPersonInfo _dbEventPerson2EventPersonInfo(db.EventPersonJoin p) =>
+      EventPersonInfo(
+          eventRole: EventPersonInfo_EventRole.valueOf(
+              p.eventParticipant.eventRole.index),
+          personInfo: PersonInfo(id: p.person.id, email: p.person.email));
 
   @override
-  Future<StatusResponse> registerForEvent(ServiceCall call, EventRegisterRequest r) async {
+  Future<StatusResponse> registerForEvent(
+      ServiceCall call, EventRegisterRequest r) async {
     // todo: What permission checks do we need here?
     try {
-      var p = await eventDao.registerPersonForEvent(eventId: r.eventId, personId: r.personId, roleInt: r.role.value);
+      var p = await eventDao.registerPersonForEvent(
+          eventId: r.eventId, personId: r.personId, roleInt: r.role.value);
       _log.fine('Created registration $p');
       return StatusResponse();
-    }
-    catch(e) {
+    } catch (e) {
       return StatusResponse(status: Status(code: 1, message: e.toString()));
     }
   }
+}
 
+extension EventExt on db.Event {
+  Event toProtoEvent() => Event(
+        eventId: id,
+        title: title,
+        description: description,
+        eventStartTs: Timestamp.fromDateTime(startTime),
+        eventEndTs: Timestamp.fromDateTime(endTime),
+        registerStartTs: Timestamp.fromDateTime(registrationStartTime),
+        registerEndTs: Timestamp.fromDateTime(registrationEndTime),
+        createdById: createdByPersonId,
+        maxParticipants: maxParticipants,
+        minParticipants: minParticipants,
+      );
+}
+
+extension PersonExt on db.Person {
+  PersonInfo toPersonInfo() => PersonInfo(
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        id: id,
+      );
 }

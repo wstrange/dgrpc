@@ -4,33 +4,40 @@ import 'package:drift/drift.dart';
 
 part 'person_dao.g.dart';
 
-
-@DriftAccessor(tables: [Persons,SectionPersons])
+@DriftAccessor(tables: [Persons, SectionPersons])
 class PersonDao extends DatabaseAccessor<Database> with _$PersonDaoMixin {
-
-  PersonDao(Database db): super(db);
+  PersonDao(Database db) : super(db);
 
   // Lookup the person by email or the single sign on id. Return
   // the entry with all the sections they belong to.
-  Future<SectionPersonEntry?> getPersonEntry({String? email, String? ssid}) async {
-
-    if( email == null && ssid == null) return null;
+  Future<SectionPersonEntry?> getPersonEntry(
+      {String? email, String? ssid}) async {
+    if (email == null && ssid == null) return null;
 
     // Find the person...
-    var q = select(persons)..where( (p) => p.email.equals(email) | p.ssid.equals(ssid));
+    var q = select(persons)
+      ..where((p) => p.email.equals(email) | p.ssid.equals(ssid));
     var p = await q.watchSingleOrNull().first;
     print('got person $p');
-    if ( p == null) {
+    if (p == null) {
       return null;
     }
     // Find all the sections they belong to
-    var q2 = select(sectionPersons)..where( (s) => s.personId.equals(p.id));
+    var q2 = select(sectionPersons)..where((s) => s.personId.equals(p.id));
     var l = await q2.get();
-    return  SectionPersonEntry(p,l.toList());
+    return SectionPersonEntry(p, l.toList());
+  }
+
+  // TODO: Implement searching
+  Future<List<Person>> getPersons(
+      {String? email,
+      String? name,
+      List<int> sectionIdList = const [],
+      List<int> personIdList = const []}) async {
+    var q = select(persons);
+    return q.get();
   }
 }
-
-
 
 class SectionPersonEntry {
   final Person person;
@@ -56,8 +63,10 @@ class SectionPersonEntry {
 
   // true if a person can create an event for a sectionId
   bool canCreateEvent({required int sectionId}) {
-    var s = sections.firstWhereOrNull((s) => s.sectionId == sectionId );
-    if( s != null && (s.sectionRole == SectionRole.admin || s.sectionRole == SectionRole.leader)) {
+    var s = sections.firstWhereOrNull((s) => s.sectionId == sectionId);
+    if (s != null &&
+        (s.sectionRole == SectionRole.admin ||
+            s.sectionRole == SectionRole.leader)) {
       return true;
     }
     return false;
@@ -66,7 +75,3 @@ class SectionPersonEntry {
   @override
   String toString() => 'SectionPersonEntry($person,$sections)';
 }
-
-
-
-

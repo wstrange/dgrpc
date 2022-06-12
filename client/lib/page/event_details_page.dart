@@ -1,3 +1,4 @@
+import 'package:client/view/person_chooser.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -45,6 +46,7 @@ class _EventView extends ConsumerWidget {
   _EventView(this.eventDetails) : event = eventDetails.event;
 
   Widget build(BuildContext context, WidgetRef ref) {
+    // todo: is this legit..
     var svc = ref.watch(eventServiceProvider).value!;
 
     return Padding(
@@ -84,7 +86,6 @@ class _EventView extends ConsumerWidget {
                   backgroundColor: Colors.brown.shade800,
                   child: const Text('A'),
                 ),
-
               );
             }).toList()),
         SizedBox(
@@ -98,9 +99,21 @@ class _EventView extends ConsumerWidget {
                       eventId: event.eventId,
                       personId: svc.personId,
                       role: EventPersonInfo_EventRole.ADMIN);
-                  print('add person  ${svc.personId} to event ${event.eventId} result=$result');
+                  print(
+                      'add person  ${svc.personId} to event ${event.eventId} result=$result');
                 },
-                child: Text('Register'))
+                child: Text('Register')),
+            ElevatedButton(
+                onPressed: () async {
+                  var selected = await showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (BuildContext context) {
+                        return PersonChooserWidget(svc);
+                      });
+                  print('selected = $selected');
+                },
+                child: Text('Add Person'))
           ],
         ),
       ]),

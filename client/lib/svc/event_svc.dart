@@ -76,4 +76,10 @@ class EventService {
       role: role,
     ));
   }
+
+  Future<List<PersonInfo>> getPersons() async {
+    var req = PersonSearchRequest();
+    var r = await stub.personSearch(req);
+    return r.personInfos;
+  }
 }

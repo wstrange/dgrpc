@@ -62,7 +62,10 @@ class Persons extends Table {
   TextColumn get email => text().withLength(min: 3, max: 64).unique()();
   // Unique single sign on id - assigned by the auth provider. EG: Firebase
   TextColumn get ssid => text().withLength(min:2, max:32).unique()();
+  TextColumn get firstName => text().nullable()();
+  TextColumn get lastName => text().nullable()();
   // The default or primary section the person belongs to
+
   IntColumn get primarySection => integer().withDefault(const Constant(0))();
   BoolColumn get superAdmin => boolean().withDefault(const Constant(false))();
 }

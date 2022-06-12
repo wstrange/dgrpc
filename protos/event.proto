@@ -58,14 +58,22 @@ message PersonInfo {
     int32 id = 2;
     // The sections the person belongs to
     repeated int32 sectionIds = 3;
+    string firstName = 4;
+    string lastName = 5;
 }
 
-message PersonLookupRequest {
+// Lookup a person. If multiple parameters are
+// provided the search is a logical AND
+message PersonSearchRequest {
     // array of persons to lookup
     repeated int32 personIds = 1;
+    // persons in the section
+    repeated int32 sectionIds = 2;
+    string emailMatch = 3; // search on email pattern
+    string nameMatch = 4; // search on name
 }
 
-message PersonLookupResponse {
+message PersonSearchResponse {
     dgrpc.Status status = 1;
     repeated PersonInfo personInfos = 2;
 }
@@ -107,7 +115,7 @@ service EventService {
     rpc GetEvents(EventLookupRequest) returns (EventLookupResponse);
     rpc CreateEvent(EventCreateRequest) returns (EventCreateResponse);
     rpc DeleteEvent(EventDeleteRequest) returns (StatusResponse);
-    rpc PersonLookup(PersonLookupRequest) returns (PersonLookupResponse);
+    rpc PersonSearch(PersonSearchRequest) returns (PersonSearchResponse);
     rpc GetEventDetails(EventDetailsRequest) returns (EventDetailsResponse);
     rpc RegisterForEvent(EventRegisterRequest) returns (StatusResponse);
 }
