@@ -32,9 +32,15 @@ class PersonDao extends DatabaseAccessor<Database> with _$PersonDaoMixin {
   Future<List<Person>> getPersons(
       {String? email,
       String? name,
+      String? filter,
       List<int> sectionIdList = const [],
       List<int> personIdList = const []}) async {
     var q = select(persons);
+    if (filter != null) {
+      q = q
+        ..where((p) => p.email.contains(filter) | p.lastName.contains(filter))
+        ..limit(10);
+    }
     return q.get();
   }
 }

@@ -77,9 +77,17 @@ class EventService {
     ));
   }
 
-  Future<List<PersonInfo>> getPersons() async {
-    var req = PersonSearchRequest();
-    var r = await stub.personSearch(req);
-    return r.personInfos;
+  Future<List<PersonInfo>> getPersons(String filter) async {
+    var req = PersonSearchRequest(filter: filter);
+    print('search filter $filter');
+    try {
+      var r = await stub.personSearch(req);
+      return r.personInfos;
+    }
+    catch(e) {
+      print('exception $e');
+      return [];
+    }
+
   }
 }

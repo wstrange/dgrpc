@@ -69,8 +69,8 @@ message PersonSearchRequest {
     repeated int32 personIds = 1;
     // persons in the section
     repeated int32 sectionIds = 2;
-    string emailMatch = 3; // search on email pattern
-    string nameMatch = 4; // search on name
+    // search filter for name or email
+    string filter = 3;
 }
 
 message PersonSearchResponse {

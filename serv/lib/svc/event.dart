@@ -102,7 +102,8 @@ class EventService extends EventServiceBase {
     // todo: implement filtering
 
     try {
-      var p = await personDao.getPersons();
+      _log.fine('Get persons filter=${request.filter}');
+      var p = await personDao.getPersons(filter: request.filter);
       return PersonSearchResponse(personInfos: p.map((e) => e.toPersonInfo()));
     } catch (e) {
       return PersonSearchResponse(
