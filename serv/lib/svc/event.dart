@@ -155,6 +155,17 @@ class EventService extends EventServiceBase {
       return StatusResponse(status: Status(code: 1, message: e.toString()));
     }
   }
+
+  @override
+  Future<StatusResponse> deletePersonFromEvent(ServiceCall call, DeletePersonFromEventRequest r) async {
+    try {
+      await eventDao.deletePersonFromEvent(eventId: r.eventId, personId: r.personId);
+      return StatusResponse();
+    }
+    catch(e) {
+      return StatusResponse(status: Status(code: 1, message: e.toString()));
+    }
+  }
 }
 
 extension EventExt on db.Event {

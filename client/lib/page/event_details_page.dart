@@ -13,19 +13,24 @@ import '../util.dart';
 import '../svc/event_svc.dart';
 
 // Fetches event details from the server.
-var eventProvider = FutureProvider.autoDispose
-    .family<EventDetailsResponse, int>((ref, eventId) async {
-  // if the counter update, refetch...
-  ref.watch(_eventRefreshCounter);
-  // ref.onDispose(() { print('dispose provider of eventId $eventId');});
+// var eventProvider = FutureProvider.autoDispose
+//     .family<EventDetailsResponse, int>((ref, eventId) async {
+//   // if the counter update, refetch...
+//   ref.watch(_eventRefreshCounter);
+//   // ref.onDispose(() { print('dispose provider of eventId $eventId');});
+//   var evp = ref.watch(eventServiceProvider);
+//   return evp.value!.getFullEventDetails(eventId);
+// });
+
+var eventStreamProvider = StreamProvider.family<EventDetailsResponse, int>((ref, eventId)  {
   var evp = ref.watch(eventServiceProvider);
-  return evp.value!.getFullEventDetails(eventId);
+  return evp.value!.getEventDetailsStream(eventId);
 });
 
 // increment to force a refecth of the event from the server.
 // todo: Alternative is to use a stream instead of the future provider
 // and have the service refresh the stream...
-var _eventRefreshCounter = StateProvider((ref) => 0);
+// var _eventRefreshCounter = StateProvider((ref) => 0);
 
 class EventsDetailsPage extends ConsumerWidget {
   final int eventId;
@@ -34,7 +39,7 @@ class EventsDetailsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var fe = ref.watch(eventProvider(eventId));
+    var fe = ref.watch(eventStreamProvider(eventId));
 
     return Scaffold(
         appBar: AppBar(title: Text('Event $eventId')),
@@ -100,7 +105,7 @@ class _EventView extends ConsumerWidget {
           children: [
             ElevatedButton(
                 onPressed: () async {
-                  var result = await svc.associatePerson2Event(
+                  var result = await svc.associatePersonToEvent(
                       eventId: event.eventId,
                       personId: svc.personId,
                       role: EventPersonInfo_EventRole.WAITLISTED);
@@ -125,13 +130,12 @@ class _EventView extends ConsumerWidget {
                   print('selected = $selected');
                   if (selected != null) {
                     for (var p in selected) {
-                      var result = await svc.associatePerson2Event(
+                      var result = await svc.associatePersonToEvent(
                           eventId: event.eventId,
                           personId: p.id,
                           role: EventPersonInfo_EventRole.REGISTERED);
                       currentlySelectedPersons.add(p);
                     }
-                    ref.read(_eventRefreshCounter.notifier).state++;
                   }
                 },
                 child: Text('Add Person'))
@@ -193,20 +197,19 @@ class _EventUserView extends StatelessWidget {
                       value: 'Remove',
                       child: Text('Remove from event'),
                       onTap: () async {
-                        // await svc.deleteEvent(event.eventId);
-                        // print('Delete event ${event.eventId}');
-                        // await svc.refreshEventStream();
+                        await eventService.deletePersonFromEvent(eventId: eventDetails.event.eventId,
+                          personId: users[i].id);
                       },
                     ),
                     if( eventRole == EventPersonInfo_EventRole.REGISTERED) PopupMenuItem<String>(
                       child: Text('Move to wait list'),
-                      onTap: () => eventService.associatePerson2Event(eventId: eventDetails.event.eventId,
+                      onTap: () => eventService.associatePersonToEvent(eventId: eventDetails.event.eventId,
                           personId: users[i].id, role: EventPersonInfo_EventRole.WAITLISTED),
                     ),
                     if( eventRole == EventPersonInfo_EventRole.WAITLISTED) PopupMenuItem<String>(
                       // value: 'MoveToEvent',
                       child: Text('Move to Event'),
-                      onTap: () => eventService.associatePerson2Event(eventId: eventDetails.event.eventId,
+                      onTap: () => eventService.associatePersonToEvent(eventId: eventDetails.event.eventId,
                           personId: users[i].id, role: EventPersonInfo_EventRole.REGISTERED),
                     ),
                   ],

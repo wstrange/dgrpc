@@ -111,6 +111,11 @@ message EventRegisterRequest {
     EventPersonInfo.EventRole role = 3;
 }
 
+message DeletePersonFromEventRequest {
+    int32 eventId = 1;
+    int32 personId = 2;
+}
+
 service EventService {
     rpc GetEvents(EventLookupRequest) returns (EventLookupResponse);
     rpc CreateEvent(EventCreateRequest) returns (EventCreateResponse);
@@ -118,4 +123,5 @@ service EventService {
     rpc PersonSearch(PersonSearchRequest) returns (PersonSearchResponse);
     rpc GetEventDetails(EventDetailsRequest) returns (EventDetailsResponse);
     rpc RegisterForEvent(EventRegisterRequest) returns (StatusResponse);
+    rpc DeletePersonFromEvent(DeletePersonFromEventRequest) returns (StatusResponse);
 }

@@ -66,16 +66,33 @@ class EventService {
     return res;
   }
 
+  final _eventDetailStreamController =  StreamController<EventDetailsResponse>();
+
+  /// Create a stream to watch for event details. Prime it with the initial event
+  Stream<EventDetailsResponse> getEventDetailsStream(int eventId) {
+    refreshEventDetailsStream(eventId);
+    return _eventDetailStreamController.stream;
+  }
+
+  void refreshEventDetailsStream(int eventId) {
+    print('refresh event stream $eventId');
+    var req = getFullEventDetails(eventId);
+    req.then( (ed) => _eventDetailStreamController.add(ed));
+  }
+
   // Add or update a persons association to an event.
-  Future<StatusResponse> associatePerson2Event(
+  Future<StatusResponse> associatePersonToEvent(
       {required int eventId,
       required personId,
       required EventPersonInfo_EventRole role}) async {
-    return await stub.registerForEvent(EventRegisterRequest(
+
+    var r = await stub.registerForEvent(EventRegisterRequest(
       eventId: eventId,
       personId: personId,
       role: role,
     ));
+    refreshEventDetailsStream(eventId);
+    return r;
   }
 
   Future<List<PersonInfo>> getPersons(String filter) async {
@@ -95,6 +112,11 @@ class EventService {
     for (var p in pl) {
       yield p;
     }
+  }
+  Future<void> deletePersonFromEvent({required int eventId, required int personId}) async {
+    var req = DeletePersonFromEventRequest(eventId: eventId, personId: personId);
+    var stat = await stub.deletePersonFromEvent(req);
+    refreshEventDetailsStream(eventId);
   }
 
 }
