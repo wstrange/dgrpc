@@ -41,6 +41,7 @@ class SectionPersons extends Table {
   Set<Column> get primaryKey => {personId, sectionId};
 }
 
+// Events that sections hold and persons register for
 class Events extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get title => text().withLength(min: 3, max: 32)();
@@ -54,6 +55,8 @@ class Events extends Table {
   IntColumn get sectionId => integer().references(Sections, #id)();
   IntColumn get maxParticipants => integer()();
   IntColumn get minParticipants => integer()();
+  // true if users automatically skip waitlisting and are directly added
+  BoolColumn get autoRegister => boolean().withDefault(const Constant(false))();
 
 }
 

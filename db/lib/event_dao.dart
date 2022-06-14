@@ -65,7 +65,19 @@ class EventDao extends DatabaseAccessor<Database> with _$EventDaoMixin {
       }).toList();
   }
 
+  // todo: Rename to associatePerson2Event?
+  /// register a person for an event. If they already have an association, update it to the role
   Future<EventParticipant> registerPersonForEvent({required int eventId, required personId, required int roleInt}) async {
+    // if they have an existing association for registered or waitlisted, delete it first
+    // Note a user can have more than one association - (admin and registered, for example) but they cant be
+    // waitlisted and registered at the same time
+    if(EventStatus.values[roleInt] == EventStatus.registered || EventStatus.values[roleInt] == EventStatus.waitlisted) {
+      // delete any existing registered or waitlisted
+      var dq = db.delete(db.eventParticipants)..where((ep) => (ep.eventId.equals(eventId) & ep.eventPersonId.equals(personId)) &
+      (ep.eventRole.equalsValue(EventStatus.waitlisted)  |  ep.eventRole.equalsValue(EventStatus.registered)));
+      await dq.go();
+    }
+
     return await db.into(db.eventParticipants).insertReturning(
           EventParticipantsCompanion.insert(eventId: eventId,
               eventPersonId: personId,

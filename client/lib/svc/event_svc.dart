@@ -16,7 +16,7 @@ class EventService {
   get currentSection => _sectionId;
   get personId => authResponse.personId;
 
-  EventService(this.stub, this._sectionId,this.authResponse) {
+  EventService(this.stub, this._sectionId, this.authResponse) {
     refreshEventStream();
   }
 
@@ -66,7 +66,8 @@ class EventService {
     return res;
   }
 
-  Future<StatusResponse> addPerson2Event(
+  // Add or update a persons association to an event.
+  Future<StatusResponse> associatePerson2Event(
       {required int eventId,
       required personId,
       required EventPersonInfo_EventRole role}) async {
@@ -83,11 +84,17 @@ class EventService {
     try {
       var r = await stub.personSearch(req);
       return r.personInfos;
-    }
-    catch(e) {
+    } catch (e) {
       print('exception $e');
       return [];
     }
-
   }
+
+  Stream<PersonInfo> getPersonInfoStream(String filter) async* {
+    var pl = await getPersons(filter);
+    for (var p in pl) {
+      yield p;
+    }
+  }
+
 }
