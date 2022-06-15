@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../svc/event_svc.dart';
 
 class EventsPage extends ConsumerWidget {
-  EventsPage({Key? key}) : super(key: key);
+  const EventsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -68,7 +68,7 @@ class EventSummaryItem extends ConsumerWidget {
   final Event event;
   final EventService svc;
 
-  EventSummaryItem(this.event, this.svc);
+  const EventSummaryItem(this.event, this.svc);
 
   @override
   Widget build(BuildContext context,WidgetRef ref) {
@@ -78,14 +78,14 @@ class EventSummaryItem extends ConsumerWidget {
 
     return Card(
       child: ListTile(
-        title: Text('${event.title}  ${st} -> ${end}'),
+        title: Text('${event.title}  $st -> $end'),
         trailing: PopupMenuButton<String>(
           padding: EdgeInsets.zero,
           onSelected: (value) => print('selected ${event.eventId}'),
           itemBuilder: (context) => <PopupMenuItem<String>>[
             PopupMenuItem<String>(
               value: 'delete',
-              child: Text('delete event'),
+              child: const Text('delete event'),
               onTap: () async {
                 await svc.deleteEvent(event.eventId);
                 print('Delete event ${event.eventId}');
@@ -94,7 +94,7 @@ class EventSummaryItem extends ConsumerWidget {
             ),
             PopupMenuItem<String>(
               value: 'register',
-              child: Text('Register for Event'),
+              child: const Text('Register for Event'),
               onTap: () => print('Register event ${event.eventId}'),
             ),
           ],

@@ -50,11 +50,11 @@ class HomePage extends ConsumerWidget {
           data: (evp) => EventView(
                 eventService: evp,
               ),
-          loading: () => Center(child: CircularProgressIndicator()),
+          loading: () => const Center(child: CircularProgressIndicator()),
           error: (err, stackTrace) => Column(
                 children: [
                   Text(err.toString()),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                 ],
               )),
     );

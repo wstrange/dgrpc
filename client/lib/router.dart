@@ -54,22 +54,22 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: "home",
         path: '/',
-        builder: (context, _) => HomePage(),
+        builder: (context, _) => const HomePage(),
       ),
       GoRoute(
         name: "login",
         path: '/login',
-        builder: (context, _) => AuthPage(),
+        builder: (context, _) => const AuthPage(),
       ),
       GoRoute(
         name: 'profile',
         path: '/profile',
-        builder: (context, _) => ProfilePage(),
+        builder: (context, _) => const ProfilePage(),
       ),
       GoRoute(
         name: 'eventcreate',
         path: '/events/create',
-        builder: (context, _) => CreateEventForm(),
+        builder: (context, _) => const CreateEventForm(),
       ),
       GoRoute(
           name: 'events',

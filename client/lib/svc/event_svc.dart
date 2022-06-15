@@ -33,12 +33,14 @@ class EventService {
     var res = await stub.deleteEvent(req);
   }
 
-  Future<void> createEvent(Event event) async {
+
+  Future<int?> createEvent(Event event) async {
     var req = EventCreateRequest(event: event);
 
     var res = await stub.createEvent(req);
     print('create request result = ${res.status}');
     if (res.status.code == 0) return null;
+    return res.eventId;
   }
 
   Future<void> refreshEventStream() async {
@@ -115,7 +117,7 @@ class EventService {
   }
   Future<void> deletePersonFromEvent({required int eventId, required int personId}) async {
     var req = DeletePersonFromEventRequest(eventId: eventId, personId: personId);
-    var stat = await stub.deletePersonFromEvent(req);
+    await stub.deletePersonFromEvent(req);
     refreshEventDetailsStream(eventId);
   }
 

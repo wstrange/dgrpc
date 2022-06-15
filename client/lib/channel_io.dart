@@ -6,7 +6,7 @@ final channel = ClientChannel(
   'warrens-air',
   port: 9090,
   options: ChannelOptions(
-    credentials: ChannelCredentials.insecure(),
+    credentials: const ChannelCredentials.insecure(),
     codecRegistry: CodecRegistry(codecs: const [GzipCodec(), IdentityCodec()]),
   ),
 );

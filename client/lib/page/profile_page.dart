@@ -22,7 +22,7 @@ class ProfilePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.read(authStateChangesProvider);
-    return Scaffold(body: ProfileScreen(),);
+    return const Scaffold(body: ProfileScreen(),);
   }
 
 }

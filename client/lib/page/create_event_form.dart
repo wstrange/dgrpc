@@ -11,11 +11,11 @@ import 'package:go_router/go_router.dart';
 // Form to create an event..
 //
 class CreateEventForm extends HookConsumerWidget {
-  CreateEventForm({Key? key}) : super(key: key);
+  const CreateEventForm({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final _formKey = useMemoized(GlobalKey<FormState>.new, const []);
+    final formKey = useMemoized(GlobalKey<FormState>.new, const []);
     final title = useTextEditingController(text: '');
     final description = useTextEditingController(text: '');
     final eventStart = useState(DateTime.now());
@@ -24,18 +24,18 @@ class CreateEventForm extends HookConsumerWidget {
     final regEnd = useState(DateTime.now().add(const Duration(days: 1)));
     final isValid = useState(false);
 
-    var _evp = ref.watch(eventServiceProvider);
-    var _sectionId = ref.read(sectionIdProvider);
+    var evp = ref.watch(eventServiceProvider);
+    var sectionId = ref.read(sectionIdProvider);
 
     validate() {
-      if( _formKey.currentState != null ) {
-        isValid.value = _formKey.currentState!.validate() ? true : false;
+      if( formKey.currentState != null ) {
+        isValid.value = formKey.currentState!.validate() ? true : false;
       }
     }
 
     // Create the event - called once the form is valid
     // If the create failed, return the error message, otherwise null
-    Future<String?> _submitCreateEvent(EventService es) async {
+    Future<int?> _submitCreateEvent(EventService es) async {
       var event = Event(title: title.text,
         description: description.text,
         eventStartTs: Timestamp.fromDateTime(eventStart.value),
@@ -44,18 +44,20 @@ class CreateEventForm extends HookConsumerWidget {
         registerEndTs: Timestamp.fromDateTime(regEnd.value),
         // TODO: Pull the users id from the provider...
         createdById: 1,
-        sectionId: _sectionId,
+        sectionId: sectionId,
         minParticipants: 2,
         maxParticipants: 4,
       );
 
-      var r =  await es.createEvent(event);
+      var r = await es.createEvent(event);
+      return r;
+
     }
 
     return Scaffold(
       appBar: AppBar(title: const Text('Create Event')),
       body: Form(
-        key: _formKey,
+        key: formKey,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           TextFormField(
             decoration: const InputDecoration(
@@ -129,13 +131,11 @@ class CreateEventForm extends HookConsumerWidget {
           const SizedBox(height: 10),
           ElevatedButton(
             onPressed: isValid.value ? () async {
-              _evp.whenData((e)  async {
-                var s = await _submitCreateEvent(e);
-                if( s == null ) {
-                  s = 'Event created';
-                }
+              evp.whenData((e)  async {
+                var id = await _submitCreateEvent(e);
+                var s = id == null ? 'Event create failed' : 'Event created';
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(s),));
-                _formKey.currentState!.reset();
+                formKey.currentState!.reset();
                 context.go('/events');
               });
             } : null,
@@ -151,16 +151,16 @@ class CreateEventForm extends HookConsumerWidget {
 }
 
 class DateTimeSelector extends HookWidget {
-  DateTimeSelector(this._dateTime, this.label, {this.onUpdate});
+  DateTimeSelector(this._dateTime, this.label, {this.onUpdate, Key? key}):super(key: key);
 
   DateTime _dateTime;
-  String label;
-  Function(DateTime)? onUpdate;
+  final String label;
+  final Function(DateTime)? onUpdate;
 
-  DateTime get dateTime => _dateTime;
-  void set dateTime(DateTime t) {
-    _dateTime = t;
-  }
+  // DateTime get dateTime => _dateTime;
+  // void set dateTime(DateTime t) {
+  //   _dateTime = t;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -170,11 +170,11 @@ class DateTimeSelector extends HookWidget {
 
     return Row(children: [
       SizedBox(
+        width: 120,
         child: Text(
           label,
           textAlign: TextAlign.right,
         ),
-        width: 120,
       ),
       const SizedBox(width: 10),
       ElevatedButton(
@@ -198,7 +198,8 @@ class DateTimeSelector extends HookWidget {
           },
           // child: Text(_value2Date(date))),
           child: SizedBox(
-              child: Text(DateFormat.yMEd().format(_dateTime)), width: 100)),
+              width: 100,
+              child: Text(DateFormat.yMEd().format(_dateTime)))),
       const SizedBox(width: 5),
       ElevatedButton(
           onPressed: () async {

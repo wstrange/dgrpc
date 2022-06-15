@@ -1,8 +1,5 @@
 import 'package:client/view/person_chooser.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:protos/protos.dart';
 
 import '../provider.dart';
@@ -12,30 +9,16 @@ import '../util.dart';
 
 import '../svc/event_svc.dart';
 
-// Fetches event details from the server.
-// var eventProvider = FutureProvider.autoDispose
-//     .family<EventDetailsResponse, int>((ref, eventId) async {
-//   // if the counter update, refetch...
-//   ref.watch(_eventRefreshCounter);
-//   // ref.onDispose(() { print('dispose provider of eventId $eventId');});
-//   var evp = ref.watch(eventServiceProvider);
-//   return evp.value!.getFullEventDetails(eventId);
-// });
-
 var eventStreamProvider = StreamProvider.family<EventDetailsResponse, int>((ref, eventId)  {
   var evp = ref.watch(eventServiceProvider);
   return evp.value!.getEventDetailsStream(eventId);
 });
 
-// increment to force a refecth of the event from the server.
-// todo: Alternative is to use a stream instead of the future provider
-// and have the service refresh the stream...
-// var _eventRefreshCounter = StateProvider((ref) => 0);
 
 class EventsDetailsPage extends ConsumerWidget {
   final int eventId;
 
-  EventsDetailsPage({Key? key, required this.eventId}) : super(key: key);
+  const EventsDetailsPage({Key? key, required this.eventId}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -46,7 +29,7 @@ class EventsDetailsPage extends ConsumerWidget {
         body: fe.when(
             data: (ev) => _EventView(ev),
             error: (e, s) => Text(e.toString()),
-            loading: () => CircularProgressIndicator()));
+            loading: () => const CircularProgressIndicator()));
   }
 
   String _trimString(String s, int len) =>
@@ -56,7 +39,7 @@ class EventsDetailsPage extends ConsumerWidget {
 class _EventView extends ConsumerWidget {
   EventDetailsResponse eventDetails;
   Event event;
-  Set<PersonInfo> currentlySelectedPersons = Set();
+  Set<PersonInfo> currentlySelectedPersons = {};
   _EventView(this.eventDetails) : event = eventDetails.event;
 
   Widget build(BuildContext context, WidgetRef ref) {
@@ -69,14 +52,14 @@ class _EventView extends ConsumerWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
-          '${event.title}',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          event.title,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         Text(event.description),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         Text("Starts on ${event.eventStartTs.yMMMd()}"),
@@ -98,7 +81,7 @@ class _EventView extends ConsumerWidget {
             eventDetails: eventDetails,
             title: 'Coordinators',
             eventRole: EventPersonInfo_EventRole.COORDINATOR),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         Row(
@@ -112,7 +95,7 @@ class _EventView extends ConsumerWidget {
                   print(
                       'add person  ${svc.personId} to event ${event.eventId} result=$result');
                 },
-                child: Text('Register')),
+                child: const Text('Register')),
             ElevatedButton(
                 onPressed: () async {
                   var selected = await showDialog<Set<PersonInfo>?>(
@@ -138,7 +121,7 @@ class _EventView extends ConsumerWidget {
                     }
                   }
                 },
-                child: Text('Add Person'))
+                child: const Text('Add Person'))
           ],
         ),
       ]),
@@ -164,21 +147,22 @@ class _EventUserView extends StatelessWidget {
   Widget build(BuildContext context) {
     var users = eventDetails.usersInEventRole(eventRole);
 
-    if (users.isEmpty)
-      return SizedBox(
+    if (users.isEmpty) {
+      return const SizedBox(
         height: 5.0,
       );
+    }
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
+        const SizedBox(
           height: 20.0,
         ),
         Text(title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0)),
-        SizedBox(
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0)),
+        const SizedBox(
           height: 10.0,
         ),
         ListView.builder(
@@ -188,27 +172,27 @@ class _EventUserView extends StatelessWidget {
             return Card(
               child: ListTile(
                 dense: true,
-                title: Text('${users[i].email}'),
+                title: Text(users[i].email),
                 trailing: PopupMenuButton<String>(
                   padding: EdgeInsets.zero,
                   // onSelected: (value) => print('selected'),
                   itemBuilder: (context) => <PopupMenuItem<String>>[
                     PopupMenuItem<String>(
                       value: 'Remove',
-                      child: Text('Remove from event'),
+                      child: const Text('Remove from event'),
                       onTap: () async {
                         await eventService.deletePersonFromEvent(eventId: eventDetails.event.eventId,
                           personId: users[i].id);
                       },
                     ),
                     if( eventRole == EventPersonInfo_EventRole.REGISTERED) PopupMenuItem<String>(
-                      child: Text('Move to wait list'),
+                      child: const Text('Move to wait list'),
                       onTap: () => eventService.associatePersonToEvent(eventId: eventDetails.event.eventId,
                           personId: users[i].id, role: EventPersonInfo_EventRole.WAITLISTED),
                     ),
                     if( eventRole == EventPersonInfo_EventRole.WAITLISTED) PopupMenuItem<String>(
                       // value: 'MoveToEvent',
-                      child: Text('Move to Event'),
+                      child: const Text('Move to Event'),
                       onTap: () => eventService.associatePersonToEvent(eventId: eventDetails.event.eventId,
                           personId: users[i].id, role: EventPersonInfo_EventRole.REGISTERED),
                     ),

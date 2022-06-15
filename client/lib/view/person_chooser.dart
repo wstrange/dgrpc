@@ -48,27 +48,27 @@ class PersonChooserWidget extends HookConsumerWidget {
 
 
     if (!personFuture.hasData) {
-      return CircularProgressIndicator();
+      return const CircularProgressIndicator();
     }
 
     var personList = personFuture.data!;
 
 
     return Dialog(
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
-        insetPadding: EdgeInsets.all(20.0),
+        insetPadding: const EdgeInsets.all(20.0),
         child: Padding(
-            padding: EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(10.0),
             child: Column(children: [
-              SizedBox(height: 5.0),
+              const SizedBox(height: 5.0),
               TextField(
                 onSubmitted: (value) {
                   print('search for $value');
                   refresh.value++;
                 },
                 controller: searchTextController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Search: enter member email or name',
                 ),
@@ -104,15 +104,15 @@ class PersonChooserWidget extends HookConsumerWidget {
                       onPressed: () {
                         Navigator.pop(context, selectedUsers.value);
                       },
-                      child: Text('Register Selected')),
-                  SizedBox(
+                      child: const Text('Register Selected')),
+                  const SizedBox(
                     width: 20.0,
                   ),
                   ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context, null);
                       },
-                      child: Text('Cancel')),
+                      child: const Text('Cancel')),
                 ],
               )
             ])));

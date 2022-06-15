@@ -1,4 +1,3 @@
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:protos/protos.dart';
 
@@ -36,7 +35,7 @@ final _dateFormatter = DateFormat.yMMMd();
 class EventSummaryItem extends ConsumerWidget {
   final Event event;
 
-  EventSummaryItem(this.event);
+  EventSummaryItem(this.event, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,7 +46,7 @@ class EventSummaryItem extends ConsumerWidget {
 
     return Card(
       child: ListTile(
-        title: Text('${event.title}  ${st} -> ${end}'),
+        title: Text('${event.title}  $st -> $end'),
         trailing: PopupMenuButton<String>(
           padding: EdgeInsets.zero,
           onSelected: (value) => print('selected ${event.eventId}'),
@@ -58,7 +57,6 @@ class EventSummaryItem extends ConsumerWidget {
               onTap: () {
                 print('Delete event ${event.eventId}');
                 esp.whenData((e) async {
-                  var res = await e.deleteEvent(event.eventId);
                   // todo: show delete event..
                   var sid = ref.watch(sectionIdProvider);
 
